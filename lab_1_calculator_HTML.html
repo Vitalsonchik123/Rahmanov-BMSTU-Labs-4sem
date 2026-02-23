@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Калькулятор</title>
+  <style>
+    /* опишем базовый стиль кнопки калькулятора */
+    .my-btn {
+      margin-right: 5px;           /* задаем отступ от кнопки справа */
+      margin-top: 5px;             /* задаем отступ от кнопки сверху*/
+      width: 60px;                 /* задаем ширину кнопки */
+      height: 50px;                /* задаем высоту кнопки */
+      border-radius: 10px;          /* округляем кнопку */
+      border: none;                /* отключаем обводку */
+      background: rgb(27, 25, 25);         /* задаем серый цвет кнопки (поменял)*/
+      color: white;                /* задаем белый цвет текста внутри кнопки */
+      font-size: 2rem;           /* увеличим размер шрифта */
+      font-family: Calibri, Helvetica, sans-serif; /* сменим шрифт */
+      cursor: pointer;             /* при наведении на кнопку курсор будет изменен
+                                      со стрелки на 'указательный палец' */
+      user-select: none;           /* отключаем возможность выделить текст внутри кнопки */
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        flex-direction: column;
+        position: relative; /* добавляем для позиционирования кнопок */
+    }
+
+    /* hover - это состояние элемента, когда на него наведен курсор */
+    .my-btn:hover {
+      background: rgb(65, 63, 63); /* при наведение курсора на кнопку, она будет окрашена в серый */
+    }
+
+    /* active - это состояние активации элемента. В случае кнопки - нажатие на нее */
+    .my-btn:active {
+      filter: brightness(130%); /* увеличим интенсивность цвета для эффекта вспышки */
+    }
+
+    /* селектор для кнопок первостепенных операций */
+    .my-btn.primary {
+      background: #16c645; /* цвет кнопки оранжевый (поменял)*/
+    }
+
+    /* селектор для кнопок второстепенных операций */
+    .my-btn.secondary {
+      background: #ab0d77; /* цвет кнопки сервый (поменял)*/
+    }
+
+    /* селектор для кнопки расчета выражения (=) */
+    .my-btn.execute {
+      width: 130px;          /* сделаем кнопку шире других */
+      border-radius: 10px;   /* подкорректируем округлость */
+    }
+
+    /* селектор для поля вывода результата */
+    .result {
+      width: 260px;
+      height: 70px;
+      border-radius: 15px;
+      margin-bottom: 15px;         /* отступ снизу */
+      padding-right: 10px;         /* выступ справа */
+      background: rgb(27, 25, 25); /* цвет можно задавать и таким образом */
+      text-align: right;           /* примагнитим текст к правой стороне */
+      color: #ffffff;              /* цвет текста белый */
+      font-size: 2rem;
+      font-family: Calibri, Helvetica, sans-serif;
+
+      line-height: 70px;   /* для вертикального выравнивания текста */
+    }
+
+    /* Светлая тема (по умолчанию) */
+    body.light-theme {
+    background-color: #ffffff;
+    transition: background-color 0.3s;
+    }
+
+    /* Темная тема */
+    body.dark-theme {
+    background-color: #333333;
+    transition: background-color 0.3s;
+    }
+
+    /* Стиль для кнопки темы */
+    #btn_theme {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 300px;
+      height: 70px;
+      border-radius: 15px;
+      font-size: 2rem;
+      font-weight: bold;
+      background: #ab0d77;
+    }
+
+    /* Эффект при наведении на кнопку темы */
+    #btn_theme:hover {
+      background: #c40e8c;
+    }
+
+    /* Стиль для кнопки GitHub */
+    .github-btn {
+        position: absolute;
+        top: 100px;
+        right: 20px;
+        width: 300px;
+        height: 70px;
+        border-radius: 15px;
+        background: #24292e;
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+        font-family: Calibri, Helvetica, sans-serif;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+    }
+
+    .github-btn:hover {
+        background: #2c3e50;
+    }
+
+    .github-btn:active {
+        transform: scale(0.95);
+    }
+
+    /* Контейнер для выпадающего блока с автором под кнопкой GitHub */
+    .author-dropdown {
+        position: absolute;
+        top: 180px; /* Располагаем сразу под кнопкой GitHub (100px + 70px + 10px отступ) */
+        right: 20px;
+        width: 300px;
+        font-family: Calibri, Helvetica, sans-serif;
+    }
+
+    /* Стили для details */
+    .author-dropdown details {
+        width: 100%;
+        margin-bottom: 10px;
+        border: 1px solid #ab0d77;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    body.dark-theme .author-dropdown details {
+        background: #444;
+        border-color: #8a0b62;
+    }
+
+    .author-dropdown summary {
+        background: #ab0d77;
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        font-size: 1.3rem;
+        cursor: pointer;
+        user-select: none;
+        text-align: center;
+    }
+
+    .author-dropdown summary:hover {
+        background: #c40e8c;
+    }
+
+    .author-dropdown .details-content {
+        padding: 15px;
+        background: rgba(171, 13, 119, 0.1);
+        font-size: 1.1rem;
+        line-height: 1.5;
+        text-align: center;
+    }
+
+    body.dark-theme .author-dropdown .details-content {
+        background: rgba(171, 13, 119, 0.3);
+        color: #fff;
+    }
+
+    /* Для темной темы кнопка GitHub */
+    body.dark-theme .github-btn {
+        border-color: #333333;
+    }
+
+    /* Для темной темы кнопка темы */
+    body.dark-theme #btn_theme {
+        border-color: #333333;
+    }
+
+    /* Основной контейнер для размещения информации слева от калькулятора */
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Контейнер с информацией (цель) слева */
+    .info-container {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Стили для цели работы */
+    .goal-section {
+      width: 300px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #f5f5f5;
+      font-family: Calibri, Helvetica, sans-serif;
+      line-height: 1.5;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    body.dark-theme .goal-section {
+      background: #444;
+      color: #fff;
+    }
+
+    .goal-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #ab0d77;
+    }
+
+    /* Подсветка ключевых слов */
+    .highlight {
+      background-color: #16c645;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+
+
+    /* Контейнер калькулятора */
+    .calculator-container {
+      flex-shrink: 0;
+    }
+
+    /* Стили для подписи с ФИО при светлой теме */
+    .signature {
+      margin-top: 20px;
+      text-align: center;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #000000; /* черный цвет для светлой темы */
+      transition: color 0.3s;
+    }
+
+    /* Стиль для подписи с ФИО при темной теме */
+    body.dark-theme .signature {
+      color: #ffffff; /* белый цвет для темной темы */
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- Кнопка темы -->
+  <button id="btn_theme" class="my-btn secondary">Тёмная тема</button>
+
+  <!-- Кнопка GitHub -->
+  <a href="https://github.com/Vitalsonchik123/Rahmanov-Sem4-Labs-2026/tree/lab_1_calculator_HTML" target="_blank" class="github-btn">GitHub</a>
+
+  <!-- Выпадающий блок с автором под кнопкой GitHub -->
+  <div class="author-dropdown">
+    <details>
+      <summary>Автор</summary>
+      <div class="details-content">
+        <strong>ФИО:</strong> Рахманов Виталий Алексеевич<br>
+        <strong>Группа:</strong> ИУ5-41Б
+      </div>
+    </details>
+  </div>
+
+  <!-- Картинка под блоком автора -->
+  <div style="position: absolute; top: 390px; right: 20px; width: 300px; text-align: center;">
+    <img src="C:\Users\Счастливый\Desktop\b9325239-4910-40ef-baf2-d45b9ee6c547.jpg" alt="картинка" style="max-width: 100%; border-radius: 10px;">
+  </div>
+
+  <!-- Основной контейнер с информацией слева и калькулятором справа -->
+  <div class="main-container">
+    <!-- Левая часть с информацией (только цель работы) -->
+    <div class="info-container">
+      <!-- Секция с целью работы -->
+      <div class="goal-section">
+        <div class="goal-title">Цель лабораторной работы</div>
+        <p class="goal-text">
+          Цель данной лабораторной работы - <span class="highlight">знакомство</span>
+          с инструментами построения пользовательских интерфейсов web-сайтов:
+          <span class="highlight">HTML</span>, <span class="highlight">CSS</span>.
+          В ходе выполнения работы, вам предстоит ознакомиться с кодом реализации
+          простого калькулятора, и затем выполнить задания по варианту.
+        </p>
+      </div>
+    </div>
+
+    <!-- Правая часть с калькулятором -->
+    <div class="calculator-container">
+      <!-- блок с экраном калькулятора, где будет выводиться результат вычислений. -->
+      <div id="result" class="result">
+        0
+      </div>
+
+      <!-- блок с кнопками калькулятора. -->
+      <div>
+        <!--горизонтальный ряд из четырех кнопок-->
+        <div>
+          <button id="btn_op_clear" class="my-btn secondary">C</button>
+          <button id="btn_op_sign" class="my-btn secondary">+/-</button>
+          <button id="btn_op_percent" class="my-btn secondary">%</button>
+          <button id="btn_op_div" class="my-btn primary">/</button>
+        </div>
+
+        <div>
+          <button id="btn_digit_7" class="my-btn">7</button>
+          <button id="btn_digit_8" class="my-btn">8</button>
+          <button id="btn_digit_9" class="my-btn">9</button>
+          <button id="btn_op_mult" class="my-btn primary">x</button>
+        </div>
+
+        <div>
+          <button id="btn_digit_4" class="my-btn">4</button>
+          <button id="btn_digit_5" class="my-btn">5</button>
+          <button id="btn_digit_6" class="my-btn">6</button>
+          <button id="btn_op_minus" class="my-btn primary">-</button>
+        </div>
+
+        <div>
+          <button id="btn_digit_1" class="my-btn">1</button>
+          <button id="btn_digit_2" class="my-btn">2</button>
+          <button id="btn_digit_3" class="my-btn">3</button>
+          <button id="btn_op_plus" class="my-btn primary">+</button>
+        </div>
+
+        <div>
+          <button id="btn_digit_0" class="my-btn">0</button>
+          <button id="btn_digit_dot" class="my-btn">.</button>
+          <button id="btn_op_equal" class="my-btn primary execute">=</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Кнопка смены темы
+    const themeButton = document.getElementById('btn_theme');
+    const body = document.body;
+
+    // Добавляем класс светлой темы по умолчанию
+    body.classList.add('light-theme');
+
+    themeButton.addEventListener('click', function() {
+        if (body.classList.contains('light-theme')) {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        themeButton.textContent = 'Светлая тема';
+        } else {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        themeButton.textContent = 'Тёмная тема';
+        }
+    });
+  </script>
+
+</body>
+
+</html>
