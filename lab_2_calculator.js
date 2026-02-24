@@ -92,6 +92,23 @@ window.onload = function() {
         outputElement.innerHTML = '0';
     };
 
+    // ==================== ШАГ 6: Кнопка backspace (del) ====================
+    document.getElementById("btn_del").onclick = function() {
+        if (!selectedOperation) {
+            // Работаем с первым числом
+            if (a.length > 0) {
+                a = a.slice(0, -1); // удаляем последний символ
+                outputElement.innerHTML = a || '0';
+            }
+        } else {
+            // Работаем со вторым числом
+            if (b.length > 0) {
+                b = b.slice(0, -1); // удаляем последний символ
+                outputElement.innerHTML = b || '0';
+            }
+        }
+    };
+
     // ==================== ШАГ 7: Кнопка смены знака (+/-) ====================
     document.getElementById("btn_op_sign").onclick = function() {
         if (!selectedOperation) {
@@ -212,17 +229,7 @@ window.onload = function() {
         }
         // Backspace для удаления последнего символа
         else if (key === 'Backspace') {
-            if (!selectedOperation) {
-                if (a.length > 0) {
-                    a = a.slice(0, -1);
-                    outputElement.innerHTML = a || '0';
-                }
-            } else {
-                if (b.length > 0) {
-                    b = b.slice(0, -1);
-                    outputElement.innerHTML = b || '0';
-                }
-            }
+            document.getElementById("btn_del").onclick();
         }
     });
 

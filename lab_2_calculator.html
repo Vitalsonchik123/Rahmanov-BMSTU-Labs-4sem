@@ -43,17 +43,17 @@
 
     /* селектор для кнопок первостепенных операций */
     .my-btn.primary {
-      background: #16c645; /* цвет кнопки оранжевый (поменял)*/
+      background: #16c645; /* цвет кнопки зеленый */
     }
 
     /* селектор для кнопок второстепенных операций */
     .my-btn.secondary {
-      background: #ab0d77; /* цвет кнопки сервый (поменял)*/
+      background: #ab0d77; /* цвет кнопки фиолетовый */
     }
 
     /* селектор для кнопки расчета выражения (=) */
     .my-btn.execute {
-      width: 130px;          /* сделаем кнопку шире других */
+      width: 60px;          /* делаем такую же ширину как у обычных кнопок */
       border-radius: 10px;   /* подкорректируем округлость */
     }
 
@@ -267,6 +267,24 @@
       color: #ffffff; /* белый цвет для темной темы */
     }
 
+    /* Контейнер для кнопок калькулятора с сеткой */
+    .buttons-container {
+      display: flex;
+      flex-direction: column;
+      width: fit-content;
+    }
+
+    /* Строка кнопок */
+    .button-row {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    /* Специальный стиль для кнопки del */
+    .my-btn.del-btn {
+      background: #ab0d77; /* цвет как у secondary */
+    }
+
   </style>
 </head>
 
@@ -318,40 +336,45 @@
       </div>
 
       <!-- блок с кнопками калькулятора. -->
-      <div>
-        <!--горизонтальный ряд из четырех кнопок-->
-        <div>
+      <div class="buttons-container">
+        <!-- Верхний ряд: только фиолетовые кнопки (C, +/-, %, del) -->
+        <div class="button-row">
           <button id="btn_op_clear" class="my-btn secondary">C</button>
           <button id="btn_op_sign" class="my-btn secondary">+/-</button>
           <button id="btn_op_percent" class="my-btn secondary">%</button>
-          <button id="btn_op_div" class="my-btn primary">/</button>
+          <button id="btn_del" class="my-btn secondary del-btn">del</button>
         </div>
 
-        <div>
+        <!-- Второй ряд: 7 8 9 и зеленая кнопка / -->
+        <div class="button-row">
           <button id="btn_digit_7" class="my-btn">7</button>
           <button id="btn_digit_8" class="my-btn">8</button>
           <button id="btn_digit_9" class="my-btn">9</button>
-          <button id="btn_op_mult" class="my-btn primary">x</button>
+          <button id="btn_op_div" class="my-btn primary">/</button>
         </div>
 
-        <div>
+        <!-- Третий ряд: 4 5 6 и зеленая кнопка x -->
+        <div class="button-row">
           <button id="btn_digit_4" class="my-btn">4</button>
           <button id="btn_digit_5" class="my-btn">5</button>
           <button id="btn_digit_6" class="my-btn">6</button>
-          <button id="btn_op_minus" class="my-btn primary">-</button>
+          <button id="btn_op_mult" class="my-btn primary">x</button>
         </div>
 
-        <div>
+        <!-- Четвертый ряд: 1 2 3 и зеленая кнопка - -->
+        <div class="button-row">
           <button id="btn_digit_1" class="my-btn">1</button>
           <button id="btn_digit_2" class="my-btn">2</button>
           <button id="btn_digit_3" class="my-btn">3</button>
-          <button id="btn_op_plus" class="my-btn primary">+</button>
+          <button id="btn_op_minus" class="my-btn primary">-</button>
         </div>
 
-        <div>
+        <!-- Пятый ряд: 0 . = и зеленая кнопка + -->
+        <div class="button-row">
           <button id="btn_digit_0" class="my-btn">0</button>
           <button id="btn_digit_dot" class="my-btn">.</button>
           <button id="btn_op_equal" class="my-btn primary execute">=</button>
+          <button id="btn_op_plus" class="my-btn primary">+</button>
         </div>
       </div>
     </div>
