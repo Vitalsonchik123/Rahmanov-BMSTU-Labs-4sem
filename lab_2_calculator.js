@@ -6,6 +6,9 @@ window.onload = function() {
     let expressionResult = ''; // Результат вычисления
     let selectedOperation = null; // Выбранная операция (+, -, x, /)
 
+    // Максимальное количество символов
+    const MAX_DIGITS = 13;
+
 
 // ШАГ 2: Получение доступа к элементам калькулятора
     // Получаем доступ к экрану калькулятора в поле вывода
@@ -19,6 +22,11 @@ window.onload = function() {
     function onDigitButtonClicked(digit) {
         // Если операция не выбрана, работаем с первым числом (a) - после выбора операции начинается ввод второго числа
         if (!selectedOperation) {
+            // Проверяем, не превысит ли добавление цифры лимит
+            if (a.length >= MAX_DIGITS) {
+                return; // Игнорируем нажатие, если достигнут лимит
+            }
+
             // Проверяем, не пытаемся ли мы добавить вторую точку
             if (digit !== '.' || (digit === '.' && !a.includes('.'))) {
                 // здесь у нас происходит складывание сохраненного уже числа и нажатой цифры. Оба поля string, поэтому
@@ -30,6 +38,11 @@ window.onload = function() {
         }
         // Если операция выбрана, работаем со вторым числом (b)
         else {
+            // Проверяем, не превысит ли добавление цифры лимит
+            if (b.length >= MAX_DIGITS) {
+                return; // Игнорируем нажатие, если достигнут лимит
+            }
+
             if (digit !== '.' || (digit === '.' && !b.includes('.'))) {
                 b += digit;
             }
@@ -115,12 +128,20 @@ window.onload = function() {
             // Работаем с первым числом
             if (a !== '') {
                 a = (parseFloat(a) * -1).toString();
+                // Ограничиваем длину результата
+                if (a.length > MAX_DIGITS) {
+                    a = a.substring(0, MAX_DIGITS);
+                }
                 outputElement.innerHTML = a;
             }
         } else {
             // Работаем со вторым числом
             if (b !== '') {
                 b = (parseFloat(b) * -1).toString();
+                // Ограничиваем длину результата
+                if (b.length > MAX_DIGITS) {
+                    b = b.substring(0, MAX_DIGITS);
+                }
                 outputElement.innerHTML = b;
             }
         }
@@ -132,12 +153,20 @@ window.onload = function() {
             // Если операция не выбрана, просто делим число на 100
             if (a !== '') {
                 a = (parseFloat(a) / 100).toString();
+                // Ограничиваем длину результата
+                if (a.length > MAX_DIGITS) {
+                    a = a.substring(0, MAX_DIGITS);
+                }
                 outputElement.innerHTML = a;
             }
         } else {
             // Если операция выбрана, работаем со вторым числом
             if (b !== '') {
                 b = (parseFloat(b) / 100).toString();
+                // Ограничиваем длину результата
+                if (b.length > MAX_DIGITS) {
+                    b = b.substring(0, MAX_DIGITS);
+                }
                 outputElement.innerHTML = b;
             }
         }
@@ -179,6 +208,12 @@ window.onload = function() {
 
         // Сохраняем результат и очищаем второе число
         a = expressionResult.toString();
+
+        // Ограничиваем длину результата
+        if (a.length > MAX_DIGITS) {
+            a = a.substring(0, MAX_DIGITS);
+        }
+
         b = '';
         selectedOperation = null;
 
