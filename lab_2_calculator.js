@@ -9,16 +9,14 @@ window.onload = function() {
     // Максимальное количество символов
     const MAX_DIGITS = 13;
 
-
-// ШАГ 2: Получение доступа к элементам калькулятора
+    // ШАГ 2: Получение доступа к элементам калькулятора
     // Получаем доступ к экрану калькулятора в поле вывода
     const outputElement = document.getElementById("result");
 
     // Получаем все цифровые кнопки (id начинаются с "btn_digit_")
     const digitButtons = document.querySelectorAll('[id ^= "btn_digit_"]');
 
-
-//ШАГ 3: Функция обработки нажатия на цифровые кнопки
+    // ШАГ 3: Функция обработки нажатия на цифровые кнопки
     function onDigitButtonClicked(digit) {
         // Если операция не выбрана, работаем с первым числом (a) - после выбора операции начинается ввод второго числа
         if (!selectedOperation) {
@@ -50,7 +48,7 @@ window.onload = function() {
         }
     }
 
-//ШАГ 4: Настройка обработчиков событий для кнопок
+    // ШАГ 4: Настройка обработчиков событий для кнопок
     digitButtons.forEach(button => {
         button.onclick = function() {
             // берем текст, написанный на кнопке - он и является цифрой
@@ -95,7 +93,7 @@ window.onload = function() {
         selectedOperation = '/';
     };
 
-//ШАГ 5: Кнопка очистки
+    // ШАГ 5: Кнопка очистки
     // Очищаем все значения при нажатии на кнопку C (вешаем обработчик события click на кнопку С)
     document.getElementById("btn_op_clear").onclick = function() {
         a = '';
@@ -105,7 +103,7 @@ window.onload = function() {
         outputElement.innerHTML = '0';
     };
 
-    // ==================== ШАГ 6: Кнопка backspace (del) ====================
+    // Кнопка del
     document.getElementById("btn_del").onclick = function() {
         if (!selectedOperation) {
             // Работаем с первым числом
@@ -122,7 +120,7 @@ window.onload = function() {
         }
     };
 
-    // ==================== ШАГ 7: Кнопка смены знака (+/-) ====================
+    // Кнопка смены знака (+/-)
     document.getElementById("btn_op_sign").onclick = function() {
         if (!selectedOperation) {
             // Работаем с первым числом
@@ -147,7 +145,7 @@ window.onload = function() {
         }
     };
 
-    // ==================== ШАГ 8: Кнопка процента (%) ====================
+    // Кнопка процента (%)
     document.getElementById("btn_op_percent").onclick = function() {
         if (!selectedOperation) {
             // Если операция не выбрана, просто делим число на 100
@@ -172,7 +170,7 @@ window.onload = function() {
         }
     };
 
-    // ==================== ШАГ 9: Функция вычисления результата ====================
+    // Функция вычисления результата ====================
     function calculateResult() {
         // Проверяем, что у нас есть оба числа и операция
         if (a === '' || b === '' || !selectedOperation) {
@@ -217,31 +215,144 @@ window.onload = function() {
         b = '';
         selectedOperation = null;
 
-        // Показываем результат на экране
         outputElement.innerHTML = a;
         return true;
     }
 
-    // ==================== ШАГ 10: Кнопка равно (=) ====================
+    //Кнопка равно (=)
     document.getElementById("btn_op_equal").onclick = function() {
         calculateResult();
     };
 
-    // ==================== ШАГ 11: Дополнительные функции ====================
+    // НОВЫЕ ФУНКЦИИ: Квадратный корень (√)
+    document.getElementById("btn_op_sqrt").onclick = function() {
+        // Определяем, с каким числом работаем
+        let currentNum = !selectedOperation ? a : b;
 
-    // Функция для обработки клавиатуры (бонус)
+        if (currentNum === '') {
+            // Если число не введено, используем результат или 0
+            currentNum = expressionResult !== '' ? expressionResult : '0';
+        }
+
+        const num = parseFloat(currentNum);
+
+        if (num < 0) {
+            alert('Ошибка: нельзя извлечь квадратный корень из отрицательного числа!');
+            return;
+        }
+
+        const result = Math.sqrt(num).toString();
+
+        // Ограничиваем длину результата
+        const finalResult = result.length > MAX_DIGITS ? result.substring(0, MAX_DIGITS) : result;
+
+        if (!selectedOperation) {
+            a = finalResult;
+            outputElement.innerHTML = a;
+        } else {
+            b = finalResult;
+            outputElement.innerHTML = b;
+        }
+    };
+
+    // НОВЫЕ ФУНКЦИИ: Возведение в квадрат (x²)
+    document.getElementById("btn_op_square").onclick = function() {
+        // Определяем, с каким числом работаем
+        let currentNum = !selectedOperation ? a : b;
+
+        if (currentNum === '') {
+            // Если число не введено, используем результат или 0
+            currentNum = expressionResult !== '' ? expressionResult : '0';
+        }
+
+        const num = parseFloat(currentNum);
+        const result = (num * num).toString();
+
+        // Ограничиваем длину результата
+        const finalResult = result.length > MAX_DIGITS ? result.substring(0, MAX_DIGITS) : result;
+
+        if (!selectedOperation) {
+            a = finalResult;
+            outputElement.innerHTML = a;
+        } else {
+            b = finalResult;
+            outputElement.innerHTML = b;
+        }
+    };
+
+    // НОВЫЕ ФУНКЦИИ: Факториал (x!)
+    document.getElementById("btn_op_factorial").onclick = function() {
+        // Определяем, с каким числом работаем
+        let currentNum = !selectedOperation ? a : b;
+
+        if (currentNum === '') {
+            // Если число не введено, используем результат или 0
+            currentNum = expressionResult !== '' ? expressionResult : '0';
+        }
+
+        const num = parseFloat(currentNum);
+
+        // Проверка, что число целое и неотрицательное
+        if (!Number.isInteger(num) || num < 0) {
+            alert('Ошибка: факториал вычисляется только для целых неотрицательных чисел!');
+            return;
+        }
+
+        if (num > 170) { // Факториал чисел больше 170 приводит к бесконечности в JavaScript
+            alert('Ошибка: число слишком большое для вычисления факториала!');
+            return;
+        }
+
+        // Вычисление факториала
+        let factorial = 1;
+        for (let i = 2; i <= num; i++) {
+            factorial *= i;
+        }
+
+        const result = factorial.toString();
+
+        // Ограничиваем длину результата
+        const finalResult = result.length > MAX_DIGITS ? result.substring(0, MAX_DIGITS) : result;
+
+        if (!selectedOperation) {
+            a = finalResult;
+            outputElement.innerHTML = a;
+        } else {
+            b = finalResult;
+            outputElement.innerHTML = b;
+        }
+    };
+
+    //Три нуля
+    document.getElementById("btn_digit_000").onclick = function() {
+        if (!selectedOperation) {
+            // Работаем с первым числом
+            if (a.length + 3 <= MAX_DIGITS) {
+                a += '000';
+                outputElement.innerHTML = a;
+            }
+        } else {
+            // Работаем со вторым числом
+            if (b.length + 3 <= MAX_DIGITS) {
+                b += '000';
+                outputElement.innerHTML = b;
+            }
+        }
+    };
+
+    //Функция для обработки клавиатуры (индивидуальное задание)
     document.addEventListener('keydown', function(event) {
         const key = event.key;
 
-        // Цифры от 0 до 9
+        //Цифры от 0 до 9
         if (key >= '0' && key <= '9') {
             onDigitButtonClicked(key);
         }
-        // Десятичная точка
+        //Десятичная точка
         else if (key === '.') {
             onDigitButtonClicked('.');
         }
-        // Операции
+        //Операции
         else if (key === '+') {
             document.getElementById("btn_op_plus").onclick();
         }
@@ -254,20 +365,36 @@ window.onload = function() {
         else if (key === '/') {
             document.getElementById("btn_op_div").onclick();
         }
-        // Enter для равно
+        //Enter для равно
         else if (key === 'Enter' || key === '=') {
             calculateResult();
         }
-        // Escape для очистки
+        //Escape для очистки
         else if (key === 'Escape' || key === 'c' || key === 'C') {
             document.getElementById("btn_op_clear").onclick();
         }
-        // Backspace для удаления последнего символа
+        //Backspace для удаления последнего символа
         else if (key === 'Backspace') {
             document.getElementById("btn_del").onclick();
         }
     });
 
-    // Небольшая инициализация: убеждаемся, что на экране 0
-    outputElement.innerHTML = '0';
+    //Смена темы
+    const themeButton = document.getElementById('btn_theme');
+    const body = document.body;
+
+    //Класс светлой темы по умолчанию
+    body.classList.add('light-theme');
+
+    themeButton.addEventListener('click', function() {
+        if (body.classList.contains('light-theme')) {
+            body.classList.remove('light-theme');
+            body.classList.add('dark-theme');
+            themeButton.textContent = 'Светлая тема';
+        } else {
+            body.classList.remove('dark-theme');
+            body.classList.add('light-theme');
+            themeButton.textContent = 'Тёмная тема';
+        }
+    });
 };

@@ -8,7 +8,7 @@
     .my-btn {
       margin-right: 5px;           /* задаем отступ от кнопки справа */
       margin-top: 5px;             /* задаем отступ от кнопки сверху*/
-      width: 60px;                 /* задаем ширину кнопки */
+      width: 63px;                 /* задаем ширину кнопки (было 60px, стало 63px) */
       height: 50px;                /* задаем высоту кнопки */
       border-radius: 10px;          /* округляем кнопку */
       border: none;                /* отключаем обводку */
@@ -53,13 +53,13 @@
 
     /* селектор для кнопки расчета выражения (=) */
     .my-btn.execute {
-      width: 60px;          /* делаем такую же ширину как у обычных кнопок */
+      width: 63px;          /* делаем такую же ширину как у обычных кнопок (было 60px, стало 63px) */
       border-radius: 10px;   /* подкорректируем округлость */
     }
 
     /* селектор для поля вывода результата */
     .result {
-      width: 260px;
+      width: 267px;         /* ширина увеличена с 260px до 267px, чтобы соответствовать новой ширине кнопок */
       height: 70px;
       border-radius: 15px;
       margin-bottom: 15px;         /* отступ снизу */
@@ -76,13 +76,11 @@
     /* Светлая тема (по умолчанию) */
     body.light-theme {
     background-color: #ffffff;
-    transition: background-color 0.3s;
     }
 
     /* Темная тема */
     body.dark-theme {
     background-color: #333333;
-    transition: background-color 0.3s;
     }
 
     /* Стиль для кнопки темы */
@@ -116,11 +114,9 @@
         font-size: 2rem;
         font-weight: bold;
         font-family: Calibri, Helvetica, sans-serif;
-        text-decoration: none;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: none;
         cursor: pointer;
     }
 
@@ -128,14 +124,10 @@
         background: #2c3e50;
     }
 
-    .github-btn:active {
-        transform: scale(0.95);
-    }
-
-    /* Контейнер для выпадающего блока с автором под кнопкой GitHub */
+    /* Контейнер для выпадающего блока с автором */
     .author-dropdown {
         position: absolute;
-        top: 180px; /* Располагаем сразу под кнопкой GitHub (100px + 70px + 10px отступ) */
+        top: 180px; /* под кнопкой GitHub */
         right: 20px;
         width: 300px;
         font-family: Calibri, Helvetica, sans-serif;
@@ -163,7 +155,6 @@
         font-weight: bold;
         font-size: 1.3rem;
         cursor: pointer;
-        user-select: none;
         text-align: center;
     }
 
@@ -221,7 +212,6 @@
       background: #f5f5f5;
       font-family: Calibri, Helvetica, sans-serif;
       line-height: 1.5;
-      transition: all 0.3s;
       box-sizing: border-box;
     }
 
@@ -259,10 +249,8 @@
       text-align: center;
       font-family: Arial, Helvetica, sans-serif;
       color: #000000; /* черный цвет для светлой темы */
-      transition: color 0.3s;
     }
 
-    /* Стиль для подписи с ФИО при темной теме */
     body.dark-theme .signature {
       color: #ffffff; /* белый цвет для темной темы */
     }
@@ -293,7 +281,7 @@
   <button id="btn_theme" class="my-btn secondary">Тёмная тема</button>
 
   <!-- Кнопка GitHub -->
-  <a href="https://github.com/Vitalsonchik123/Rahmanov-Sem4-Labs-2026/tree/lab_1_calculator_HTML" target="_blank" class="github-btn">GitHub</a>
+  <a href="https://github.com/Vitalsonchik123/Rahmanov-Sem4-Labs-2026" target="_blank" class="github-btn">GitHub</a>
 
   <!-- Выпадающий блок с автором под кнопкой GitHub -->
   <div class="author-dropdown">
@@ -337,7 +325,15 @@
 
       <!-- блок с кнопками калькулятора. -->
       <div class="buttons-container">
-        <!-- Верхний ряд: только фиолетовые кнопки (C, +/-, %, del) -->
+        <!-- НОВЫЙ ВЕРХНИЙ РЯД: пурпурные кнопки √, x², x!, 000 -->
+        <div class="button-row">
+          <button id="btn_op_sqrt" class="my-btn secondary">√</button>
+          <button id="btn_op_square" class="my-btn secondary">x²</button>
+          <button id="btn_op_factorial" class="my-btn secondary">x!</button>
+          <button id="btn_digit_000" class="my-btn secondary">000</button>
+        </div>
+
+        <!-- Второй ряд: только фиолетовые кнопки (C, +/-, %, del) -->
         <div class="button-row">
           <button id="btn_op_clear" class="my-btn secondary">C</button>
           <button id="btn_op_sign" class="my-btn secondary">+/-</button>
@@ -345,7 +341,7 @@
           <button id="btn_del" class="my-btn secondary del-btn">del</button>
         </div>
 
-        <!-- Второй ряд: 7 8 9 и зеленая кнопка / -->
+        <!-- Третий ряд: 7 8 9 и зеленая кнопка / -->
         <div class="button-row">
           <button id="btn_digit_7" class="my-btn">7</button>
           <button id="btn_digit_8" class="my-btn">8</button>
@@ -353,7 +349,7 @@
           <button id="btn_op_div" class="my-btn primary">/</button>
         </div>
 
-        <!-- Третий ряд: 4 5 6 и зеленая кнопка x -->
+        <!-- Четвертый ряд: 4 5 6 и зеленая кнопка x -->
         <div class="button-row">
           <button id="btn_digit_4" class="my-btn">4</button>
           <button id="btn_digit_5" class="my-btn">5</button>
@@ -361,7 +357,7 @@
           <button id="btn_op_mult" class="my-btn primary">x</button>
         </div>
 
-        <!-- Четвертый ряд: 1 2 3 и зеленая кнопка - -->
+        <!-- Пятый ряд: 1 2 3 и зеленая кнопка - -->
         <div class="button-row">
           <button id="btn_digit_1" class="my-btn">1</button>
           <button id="btn_digit_2" class="my-btn">2</button>
@@ -369,7 +365,7 @@
           <button id="btn_op_minus" class="my-btn primary">-</button>
         </div>
 
-        <!-- Пятый ряд: 0 . = и зеленая кнопка + -->
+        <!-- Шестой ряд: 0 . = и зеленая кнопка + -->
         <div class="button-row">
           <button id="btn_digit_0" class="my-btn">0</button>
           <button id="btn_digit_dot" class="my-btn">.</button>
@@ -380,28 +376,7 @@
     </div>
   </div>
 
-  <script>
-    // Кнопка смены темы
-    const themeButton = document.getElementById('btn_theme');
-    const body = document.body;
-
-    // Добавляем класс светлой темы по умолчанию
-    body.classList.add('light-theme');
-
-    themeButton.addEventListener('click', function() {
-        if (body.classList.contains('light-theme')) {
-        body.classList.remove('light-theme');
-        body.classList.add('dark-theme');
-        themeButton.textContent = 'Светлая тема';
-        } else {
-        body.classList.remove('dark-theme');
-        body.classList.add('light-theme');
-        themeButton.textContent = 'Тёмная тема';
-        }
-    });
-  </script>
-
-<script src="lab_2_calculator.js"></script>
+  <script src="lab_2_calculator.js"></script>
 
 </body>
 
