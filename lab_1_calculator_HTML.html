@@ -43,12 +43,12 @@
 
     /* селектор для кнопок первостепенных операций */
     .my-btn.primary {
-      background: #16c645; /* цвет кнопки оранжевый (поменял)*/
+      background: #16c645;
     }
 
     /* селектор для кнопок второстепенных операций */
     .my-btn.secondary {
-      background: #ab0d77; /* цвет кнопки сервый (поменял)*/
+      background: #fe8c01;
     }
 
     /* селектор для кнопки расчета выражения (=) */
@@ -95,12 +95,12 @@
       border-radius: 15px;
       font-size: 2rem;
       font-weight: bold;
-      background: #ab0d77;
+      background: #fe8c01;
     }
 
     /* Эффект при наведении на кнопку темы */
     #btn_theme:hover {
-      background: #c40e8c;
+      background: #da8c2e;
     }
 
     /* Стиль для кнопки GitHub */
@@ -135,7 +135,7 @@
     /* Контейнер для выпадающего блока с автором под кнопкой GitHub */
     .author-dropdown {
         position: absolute;
-        top: 180px; /* Располагаем сразу под кнопкой GitHub (100px + 70px + 10px отступ) */
+        top: 180px;
         right: 20px;
         width: 300px;
         font-family: Calibri, Helvetica, sans-serif;
@@ -145,19 +145,14 @@
     .author-dropdown details {
         width: 100%;
         margin-bottom: 10px;
-        border: 1px solid #ab0d77;
+        border: 1px solid #ce770c;
         border-radius: 10px;
         overflow: hidden;
-        background: #fff;
     }
 
-    body.dark-theme .author-dropdown details {
-        background: #444;
-        border-color: #8a0b62;
-    }
-
+    /* Стили для summary (заголовок "Автор")*/
     .author-dropdown summary {
-        background: #ab0d77;
+        background: #fe8c01;
         color: white;
         padding: 15px;
         font-weight: bold;
@@ -167,21 +162,44 @@
         text-align: center;
     }
 
-    .author-dropdown summary:hover {
-        background: #c40e8c;
+    /* Убираем стандартный маркер у details для Firefox */
+    .author-dropdown summary::-moz-list-bullet {
+        list-style-type: none;
     }
 
+    /* Убираем стандартный маркер у details для Chrome/Safari */
+    .author-dropdown summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .author-dropdown summary:hover {
+        background: #da8c2e; /* Более светлый оранжевый при наведении */
+    }
+
+    /* Фон для details при светлой теме */
+    .author-dropdown details {
+        background: #fff;
+    }
+
+    /* Фон для details при темной теме */
+    body.dark-theme .author-dropdown details {
+        background: #444;
+    }
+
+    /* Стили для содержимого блока автора */
     .author-dropdown .details-content {
         padding: 15px;
-        background: rgba(171, 13, 119, 0.1);
         font-size: 1.1rem;
         line-height: 1.5;
         text-align: center;
+        color: #000000;
+        background: rgba(61, 59, 60, 0.1);
     }
 
+    /* Стили для темной темы в блоке автора */
     body.dark-theme .author-dropdown .details-content {
-        background: rgba(171, 13, 119, 0.3);
-        color: #fff;
+        color: #ffffff; /* белый цвет для темной темы */
+        background: rgba(51, 51, 51, 0.3);
     }
 
     /* Для темной темы кнопка GitHub */
@@ -234,7 +252,7 @@
       font-weight: bold;
       font-size: 1.2rem;
       margin-bottom: 10px;
-      color: #ab0d77;
+      color: #fe8c01;
     }
 
     /* Подсветка ключевых слов */
@@ -246,23 +264,20 @@
       font-weight: bold;
     }
 
-
-
     /* Контейнер калькулятора */
     .calculator-container {
       flex-shrink: 0;
     }
 
-    /* Стили для подписи с ФИО при светлой теме */
+    /* Стили для подписи внизу */
     .signature {
       margin-top: 20px;
       text-align: center;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Calibri, Helvetica, sans-serif;
       color: #000000; /* черный цвет для светлой темы */
       transition: color 0.3s;
     }
 
-    /* Стиль для подписи с ФИО при темной теме */
     body.dark-theme .signature {
       color: #ffffff; /* белый цвет для темной темы */
     }
@@ -270,7 +285,7 @@
   </style>
 </head>
 
-<body>
+<body class="light-theme"> <!-- Явно указываем светлую тему по умолчанию -->
   <!-- Кнопка темы -->
   <button id="btn_theme" class="my-btn secondary">Тёмная тема</button>
 
@@ -353,6 +368,28 @@
     </div>
   </div>
 
+
+  <div class="signature">
+    Разработчик: Рахманов Виталий Алексеевич, группа ИУ5-41Б
+  </div>
+
+
+  <script>
+    const themeButton = document.getElementById('btn_theme');
+    const body = document.body;
+
+    themeButton.addEventListener('click', () => {
+      if (body.classList.contains('light-theme')) {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        themeButton.textContent = 'Светлая тема';
+      } else {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        themeButton.textContent = 'Тёмная тема';
+      }
+    });
+  </script>
 
 </body>
 
