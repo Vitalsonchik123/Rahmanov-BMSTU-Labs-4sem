@@ -8,7 +8,7 @@
     .my-btn {
       margin-right: 5px;           /* задаем отступ от кнопки справа */
       margin-top: 5px;             /* задаем отступ от кнопки сверху*/
-      width: 63px;                 /* задаем ширину кнопки (было 60px, стало 63px) */
+      width: 63px;                 /* задаем ширину кнопки */
       height: 50px;                /* задаем высоту кнопки */
       border-radius: 10px;          /* округляем кнопку */
       border: none;                /* отключаем обводку */
@@ -38,7 +38,7 @@
 
     /* active - это состояние активации элемента. В случае кнопки - нажатие на нее */
     .my-btn:active {
-      filter: brightness(130%); /* увеличим интенсивность цвета для эффекта вспышки */
+      filter: brightness(130%);
     }
 
     /* селектор для кнопок первостепенных операций */
@@ -53,18 +53,18 @@
 
     /* селектор для кнопки расчета выражения (=) */
     .my-btn.execute {
-      width: 63px;          /* делаем такую же ширину как у обычных кнопок (было 60px, стало 63px) */
-      border-radius: 10px;   /* подкорректируем округлость */
+      width: 63px;
+      border-radius: 10px;
     }
 
     /* селектор для поля вывода результата */
     .result {
-      width: 267px;         /* ширина увеличена с 260px до 267px, чтобы соответствовать новой ширине кнопок */
+      width: 267px;
       height: 70px;
       border-radius: 15px;
       margin-bottom: 15px;         /* отступ снизу */
       padding-right: 10px;         /* выступ справа */
-      background: rgb(27, 25, 25); /* цвет можно задавать и таким образом */
+      background: rgb(27, 25, 25);
       text-align: right;           /* примагнитим текст к правой стороне */
       color: #ffffff;              /* цвет текста белый */
       font-size: 2rem;
@@ -215,6 +215,10 @@
       box-sizing: border-box;
     }
 
+    .goal-text {
+      text-align: justify;
+    }
+
     body.dark-theme .goal-section {
       background: #444;
       color: #fff;
@@ -236,14 +240,7 @@
       font-weight: bold;
     }
 
-
-
-    /* Контейнер калькулятора */
-    .calculator-container {
-      flex-shrink: 0;
-    }
-
-    /* Стили для подписи с ФИО при светлой теме */
+    /* Стили для подписи с ФИО при разных темах */
     .signature {
       margin-top: 20px;
       text-align: center;
@@ -255,7 +252,7 @@
       color: #ffffff; /* белый цвет для темной темы */
     }
 
-    /* Контейнер для кнопок калькулятора с сеткой */
+    /* Контейнер для кнопок калькулятора*/
     .buttons-container {
       display: flex;
       flex-direction: column;
@@ -270,7 +267,7 @@
 
     /* Специальный стиль для кнопки del */
     .my-btn.del-btn {
-      background: #ab0d77; /* цвет как у secondary */
+      background: #ab0d77;
     }
 
   </style>
@@ -299,11 +296,8 @@
     <img src="C:\Users\Счастливый\Desktop\b9325239-4910-40ef-baf2-d45b9ee6c547.jpg" alt="картинка" style="max-width: 100%; border-radius: 10px;">
   </div>
 
-  <!-- Основной контейнер с информацией слева и калькулятором справа -->
   <div class="main-container">
-    <!-- Левая часть с информацией (только цель работы) -->
     <div class="info-container">
-      <!-- Секция с целью работы -->
       <div class="goal-section">
         <div class="goal-title">Цель лабораторной работы</div>
         <p class="goal-text">
@@ -325,7 +319,6 @@
 
       <!-- блок с кнопками калькулятора. -->
       <div class="buttons-container">
-        <!-- НОВЫЙ ВЕРХНИЙ РЯД: пурпурные кнопки √, x², x!, 000 -->
         <div class="button-row">
           <button id="btn_op_sqrt" class="my-btn secondary">√</button>
           <button id="btn_op_square" class="my-btn secondary">x²</button>
@@ -333,7 +326,6 @@
           <button id="btn_digit_000" class="my-btn secondary">000</button>
         </div>
 
-        <!-- Второй ряд: только фиолетовые кнопки (C, +/-, %, del) -->
         <div class="button-row">
           <button id="btn_op_clear" class="my-btn secondary">C</button>
           <button id="btn_op_sign" class="my-btn secondary">+/-</button>
@@ -341,7 +333,6 @@
           <button id="btn_del" class="my-btn secondary del-btn">del</button>
         </div>
 
-        <!-- Третий ряд: 7 8 9 и зеленая кнопка / -->
         <div class="button-row">
           <button id="btn_digit_7" class="my-btn">7</button>
           <button id="btn_digit_8" class="my-btn">8</button>
@@ -349,7 +340,6 @@
           <button id="btn_op_div" class="my-btn primary">/</button>
         </div>
 
-        <!-- Четвертый ряд: 4 5 6 и зеленая кнопка x -->
         <div class="button-row">
           <button id="btn_digit_4" class="my-btn">4</button>
           <button id="btn_digit_5" class="my-btn">5</button>
@@ -357,7 +347,6 @@
           <button id="btn_op_mult" class="my-btn primary">x</button>
         </div>
 
-        <!-- Пятый ряд: 1 2 3 и зеленая кнопка - -->
         <div class="button-row">
           <button id="btn_digit_1" class="my-btn">1</button>
           <button id="btn_digit_2" class="my-btn">2</button>
@@ -365,7 +354,6 @@
           <button id="btn_op_minus" class="my-btn primary">-</button>
         </div>
 
-        <!-- Шестой ряд: 0 . = и зеленая кнопка + -->
         <div class="button-row">
           <button id="btn_digit_0" class="my-btn">0</button>
           <button id="btn_digit_dot" class="my-btn">.</button>

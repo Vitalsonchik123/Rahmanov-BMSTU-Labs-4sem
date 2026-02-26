@@ -6,17 +6,17 @@ window.onload = function() {
     let expressionResult = ''; // Результат вычисления
     let selectedOperation = null; // Выбранная операция (+, -, x, /)
 
-    // Максимальное количество символов
+    // Максимальное количество символов в окне вывода/ввода
     const MAX_DIGITS = 13;
 
-    // ШАГ 2: Получение доступа к элементам калькулятора
+// ШАГ 2: Получение доступа к элементам калькулятора
     // Получаем доступ к экрану калькулятора в поле вывода
     const outputElement = document.getElementById("result");
 
     // Получаем все цифровые кнопки (id начинаются с "btn_digit_")
     const digitButtons = document.querySelectorAll('[id ^= "btn_digit_"]');
 
-    // ШАГ 3: Функция обработки нажатия на цифровые кнопки
+// ШАГ 3: Функция обработки нажатия на цифровые кнопки
     function onDigitButtonClicked(digit) {
         // Если операция не выбрана, работаем с первым числом (a) - после выбора операции начинается ввод второго числа
         if (!selectedOperation) {
@@ -48,7 +48,7 @@ window.onload = function() {
         }
     }
 
-    // ШАГ 4: Настройка обработчиков событий для кнопок
+// ШАГ 4: Настройка обработчиков событий для кнопок
     digitButtons.forEach(button => {
         button.onclick = function() {
             // берем текст, написанный на кнопке - он и является цифрой
@@ -93,7 +93,7 @@ window.onload = function() {
         selectedOperation = '/';
     };
 
-    // ШАГ 5: Кнопка очистки
+// ШАГ 5: Кнопка очистки
     // Очищаем все значения при нажатии на кнопку C (вешаем обработчик события click на кнопку С)
     document.getElementById("btn_op_clear").onclick = function() {
         a = '';
@@ -170,7 +170,7 @@ window.onload = function() {
         }
     };
 
-    // Функция вычисления результата ====================
+// Функция вычисления результата
     function calculateResult() {
         // Проверяем, что у нас есть оба числа и операция
         if (a === '' || b === '' || !selectedOperation) {
@@ -224,7 +224,7 @@ window.onload = function() {
         calculateResult();
     };
 
-    // НОВЫЕ ФУНКЦИИ: Квадратный корень (√)
+    //Квадратный корень (√)
     document.getElementById("btn_op_sqrt").onclick = function() {
         // Определяем, с каким числом работаем
         let currentNum = !selectedOperation ? a : b;
@@ -255,7 +255,7 @@ window.onload = function() {
         }
     };
 
-    // НОВЫЕ ФУНКЦИИ: Возведение в квадрат (x²)
+    //Возведение в квадрат (x²)
     document.getElementById("btn_op_square").onclick = function() {
         // Определяем, с каким числом работаем
         let currentNum = !selectedOperation ? a : b;
@@ -280,7 +280,7 @@ window.onload = function() {
         }
     };
 
-    // НОВЫЕ ФУНКЦИИ: Факториал (x!)
+    //Факториал (x!)
     document.getElementById("btn_op_factorial").onclick = function() {
         // Определяем, с каким числом работаем
         let currentNum = !selectedOperation ? a : b;
