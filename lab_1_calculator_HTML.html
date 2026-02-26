@@ -357,26 +357,6 @@
     </div>
   </div>
 
-  <script>
-    // Кнопка смены темы
-    const themeButton = document.getElementById('btn_theme');
-    const body = document.body;
-
-    // Добавляем класс светлой темы по умолчанию
-    body.classList.add('light-theme');
-
-    themeButton.addEventListener('click', function() {
-        if (body.classList.contains('light-theme')) {
-        body.classList.remove('light-theme');
-        body.classList.add('dark-theme');
-        themeButton.textContent = 'Светлая тема';
-        } else {
-        body.classList.remove('dark-theme');
-        body.classList.add('light-theme');
-        themeButton.textContent = 'Тёмная тема';
-        }
-    });
-  </script>
 
 </body>
 
