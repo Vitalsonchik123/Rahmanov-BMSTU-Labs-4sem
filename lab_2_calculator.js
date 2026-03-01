@@ -340,10 +340,9 @@ window.onload = function() {
         }
     };
 
-    //Функция для обработки клавиатуры (индивидуальное задание)
-    document.addEventListener('keydown', function(event) {
+    //Функция для обработки клавиатуры
+    document.addEventListener('keydown', function(event) {  //всё время считывать нажате клавиш
         const key = event.key;
-
         //Цифры от 0 до 9
         if (key >= '0' && key <= '9') {
             onDigitButtonClicked(key);
