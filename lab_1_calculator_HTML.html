@@ -162,18 +162,8 @@
         text-align: center;
     }
 
-    /* Убираем стандартный маркер у details для Firefox */
-    .author-dropdown summary::-moz-list-bullet {
-        list-style-type: none;
-    }
-
-    /* Убираем стандартный маркер у details для Chrome/Safari */
-    .author-dropdown summary::-webkit-details-marker {
-        display: none;
-    }
-
     .author-dropdown summary:hover {
-        background: #da8c2e; /* Более светлый оранжевый при наведении */
+        background: #da8c2e;
     }
 
     /* Фон для details при светлой теме */
@@ -204,11 +194,6 @@
 
     /* Для темной темы кнопка GitHub */
     body.dark-theme .github-btn {
-        border-color: #333333;
-    }
-
-    /* Для темной темы кнопка темы */
-    body.dark-theme #btn_theme {
         border-color: #333333;
     }
 
@@ -282,6 +267,27 @@
       color: #ffffff; /* белый цвет для темной темы */
     }
 
+    /* === НОВЫЕ ПРАВИЛА ДЛЯ СМЕНЫ ЦВЕТА КНОПОК В ЗАВИСИМОСТИ ОТ ТЕМЫ === */
+    /* Для светлой темы: обычные кнопки (без primary/secondary) становятся светло-серыми */
+    body.light-theme .my-btn:not(.primary):not(.secondary) {
+      background: #e0e0e0; /* светло-серый */
+      color: #000000; /* черный текст для контраста */
+    }
+
+    /* Оставляем эффект наведения для светлой темы */
+    body.light-theme .my-btn:not(.primary):not(.secondary):hover {
+      background: #c0c0c0; /* чуть темнее при наведении */
+    }
+
+    /* Для темной темы возвращаем исходный черный цвет */
+    body.dark-theme .my-btn:not(.primary):not(.secondary) {
+      background: rgb(27, 25, 25); /* исходный черный */
+      color: white;
+    }
+
+    body.dark-theme .my-btn:not(.primary):not(.secondary):hover {
+      background: rgb(65, 63, 63); /* исходный серый при наведении */
+    }
   </style>
 </head>
 
