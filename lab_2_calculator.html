@@ -12,9 +12,9 @@
       height: 50px;                /* задаем высоту кнопки */
       border-radius: 10px;          /* округляем кнопку */
       border: none;                /* отключаем обводку */
-      background: rgb(27, 25, 25);         /* задаем серый цвет кнопки (поменял)*/
+      background: rgb(27, 25, 25);  /* цвет по умолчанию (для темной темы) */
       color: white;                /* задаем белый цвет текста внутри кнопки */
-      font-size: 2rem;           /* увеличим размер шрифта */
+      font-size: 2rem;             /* увеличим размер шрифта */
       font-family: Calibri, Helvetica, sans-serif; /* сменим шрифт */
       cursor: pointer;             /* при наведении на кнопку курсор будет изменен
                                       со стрелки на 'указательный палец' */
@@ -46,9 +46,17 @@
       background: #16c645; /* цвет кнопки зеленый */
     }
 
+    .my-btn.primary:hover {
+      background: #1fa53f; /* более темный зеленый при наведении */
+    }
+
     /* селектор для кнопок второстепенных операций */
     .my-btn.secondary {
-      background: #ab0d77; /* цвет кнопки фиолетовый */
+      background: #fe8c01; /* цвет кнопки оранжевый */
+    }
+
+    .my-btn.secondary:hover {
+      background: #da8c2e; /* более темный оранжевый при наведении */
     }
 
     /* селектор для кнопки расчета выражения (=) */
@@ -69,18 +77,40 @@
       color: #ffffff;              /* цвет текста белый */
       font-size: 2rem;
       font-family: Calibri, Helvetica, sans-serif;
-
       line-height: 70px;   /* для вертикального выравнивания текста */
+      box-sizing: border-box;
     }
 
     /* Светлая тема (по умолчанию) */
     body.light-theme {
     background-color: #ffffff;
+    transition: background-color 0.3s;
     }
 
     /* Темная тема */
     body.dark-theme {
     background-color: #333333;
+    transition: background-color 0.3s;
+    }
+
+    /* Кнопки в светлой теме */
+    body.light-theme .my-btn:not(.primary):not(.secondary) {
+      background: #e0e0e0; /* серый для цифр и точки */
+      color: #000000; /* черный текст */
+    }
+
+    body.light-theme .my-btn:not(.primary):not(.secondary):hover {
+      background: #c0c0c0; /* темнее при наведении */
+    }
+
+    /* Для темной темы возвращаем исходный черный цвет */
+    body.dark-theme .my-btn:not(.primary):not(.secondary) {
+      background: rgb(27, 25, 25); /* исходный черный */
+      color: white;
+    }
+
+    body.dark-theme .my-btn:not(.primary):not(.secondary):hover {
+      background: rgb(65, 63, 63); /* исходный серый при наведении */
     }
 
     /* Стиль для кнопки темы */
@@ -93,12 +123,14 @@
       border-radius: 15px;
       font-size: 2rem;
       font-weight: bold;
-      background: #ab0d77;
+      background: #fe8c01;
+      color: white;
+      cursor: pointer;
     }
 
     /* Эффект при наведении на кнопку темы */
     #btn_theme:hover {
-      background: #c40e8c;
+      background: #da8c2e;
     }
 
     /* Стиль для кнопки GitHub */
@@ -130,48 +162,50 @@
         top: 180px; /* под кнопкой GitHub */
         right: 20px;
         width: 300px;
+
         font-family: Calibri, Helvetica, sans-serif;
     }
 
-    /* Стили для details */
+    /* Стили для details - делаем закругленным */
     .author-dropdown details {
         width: 100%;
         margin-bottom: 10px;
-        border: 1px solid #ab0d77;
-        border-radius: 10px;
         overflow: hidden;
         background: #fff;
+        border-radius: 15px; /* добавляем закругление как у кнопок */
     }
 
     body.dark-theme .author-dropdown details {
         background: #444;
-        border-color: #8a0b62;
     }
 
     .author-dropdown summary {
-        background: #ab0d77;
+        background: #fe8c01;
         color: white;
         padding: 15px;
         font-weight: bold;
         font-size: 1.3rem;
         cursor: pointer;
         text-align: center;
+        border-radius: 15px; /* добавляем закругление */
     }
 
     .author-dropdown summary:hover {
-        background: #c40e8c;
+        background: #da8c2e;
     }
 
     .author-dropdown .details-content {
         padding: 15px;
-        background: rgba(171, 13, 119, 0.1);
+        background: rgba(254, 140, 1, 0.1);
         font-size: 1.1rem;
         line-height: 1.5;
         text-align: center;
+        border-bottom-left-radius: 15px; /* закругляем нижние углы */
+        border-bottom-right-radius: 15px; /* закругляем нижние углы */
     }
 
     body.dark-theme .author-dropdown .details-content {
-        background: rgba(171, 13, 119, 0.3);
+        background: rgba(254, 140, 1, 0.3);
         color: #fff;
     }
 
@@ -228,7 +262,7 @@
       font-weight: bold;
       font-size: 1.2rem;
       margin-bottom: 10px;
-      color: #ab0d77;
+      color: #fe8c01;
     }
 
     /* Подсветка ключевых слов */
@@ -267,13 +301,33 @@
 
     /* Специальный стиль для кнопки del */
     .my-btn.del-btn {
-      background: #ab0d77;
+      background: #fe8c01;
     }
 
+    .my-btn.del-btn:hover {
+      background: #da8c2e;
+    }
+
+    /* Стили для картинки */
+    .author-image {
+      position: absolute;
+      top: 390px;
+      right: 20px;
+      width: 300px;
+      text-align: center;
+    }
+
+    .author-image img {
+      max-width: 100%;
+    }
+
+    body.dark-theme .author-image img {
+      border-color: #da8c2e;
+    }
   </style>
 </head>
 
-<body>
+<body class="light-theme">
   <!-- Кнопка темы -->
   <button id="btn_theme" class="my-btn secondary">Тёмная тема</button>
 
@@ -292,8 +346,8 @@
   </div>
 
   <!-- Картинка под блоком автора -->
-  <div style="position: absolute; top: 390px; right: 20px; width: 300px; text-align: center;">
-    <img src="C:\Users\Счастливый\Desktop\b9325239-4910-40ef-baf2-d45b9ee6c547.jpg" alt="картинка" style="max-width: 100%; border-radius: 10px;">
+  <div class="author-image">
+    <img src="C:\Users\Счастливый\Desktop\b9325239-4910-40ef-baf2-d45b9ee6c547.jpg" alt="картинка">
   </div>
 
   <div class="main-container">
@@ -364,6 +418,7 @@
     </div>
   </div>
 
+  <!-- Скрипт для переключения темы -->
   <script src="lab_2_calculator.js"></script>
 
 </body>
