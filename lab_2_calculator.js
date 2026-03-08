@@ -230,10 +230,8 @@ window.onload = function() {
         let currentNum = !selectedOperation ? a : b;
 
         if (currentNum === '') {
-            // Если число не введено, используем результат или 0
             currentNum = expressionResult !== '' ? expressionResult : '0';
         }
-
         const num = parseFloat(currentNum);
 
         if (num < 0) {
