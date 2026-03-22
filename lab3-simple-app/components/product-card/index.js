@@ -6,7 +6,7 @@ export class ProductCardComponent {
     getHTML(data) {
         return (
             `
-            <div class="card" style="width: 300px;">
+            <div class="card product-card" style="width: 300px;" data-id="${data.id}">
                 <img class="card-img-top"
                      src="${data.src}"
                      alt="картинка"
@@ -15,28 +15,38 @@ export class ProductCardComponent {
                 <div class="card-body">
                     <h5 class="card-title">${data.title}</h5>
                     <p class="card-text">${data.text}</p>
-                    <button class="btn btn-primary" id="click-card-${data.id}" data-id="${data.id}">Нажми на меня</button>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-success btn-sm detail-btn" data-id="${data.id}"> Подробнее</button>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}"> Удалить</button>
+                    </div>
                 </div>
             </div>
             `
         );
     }
 
-    addListeners(data, listener) {
-        console.log(`Добавляем слушатель для кнопки click-card-${data.id}`);
-        const button = document.getElementById(`click-card-${data.id}`);
-        if (button) {
-            button.addEventListener("click", listener);
-            console.log(`Слушатель добавлен для кнопки ${data.id}`);
-        } else {
-            console.error(`Кнопка click-card-${data.id} не найдена!`);
+    addListeners(data, detailListener, deleteListener) {
+        const detailButton = document.querySelector(`.detail-btn[data-id="${data.id}"]`);
+        const deleteButton = document.querySelector(`.delete-btn[data-id="${data.id}"]`);
+
+        if (detailButton) {
+            detailButton.addEventListener("click", (e) => {
+                e.stopPropagation();
+                detailListener(data.id);
+            });
+        }
+
+        if (deleteButton) {
+            deleteButton.addEventListener("click", (e) => {
+                e.stopPropagation();
+                deleteListener(data.id);
+            });
         }
     }
 
-    render(data, listener) {
-        console.log('Рендерим карточку с данными:', data);
+    render(data, detailListener, deleteListener) {
         const html = this.getHTML(data);
         this.parent.insertAdjacentHTML('beforeend', html);
-        this.addListeners(data, listener);
+        this.addListeners(data, detailListener, deleteListener);
     }
 }

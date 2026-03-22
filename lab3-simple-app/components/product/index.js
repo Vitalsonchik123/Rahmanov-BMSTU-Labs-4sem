@@ -6,16 +6,22 @@ export class ProductComponent {
     getHTML(data) {
         return (
             `
-            <div class="card mb-3" style="width: 540px;">
+            <div class="card mb-3" style="max-width: 800px;">
                 <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="${data.src}" class="img-fluid" alt="картинка" style="height: 200px; object-fit: cover;">
+                    <div class="col-md-5">
+                        <img src="${data.src}" class="img-fluid rounded-start" alt="картинка" style="height: 300px; object-fit: cover;">
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-7">
                         <div class="card-body">
-                            <h5 class="card-title">${data.title}</h5>
+                            <h3 class="card-title">${data.title}</h3>
                             <p class="card-text">${data.text}</p>
                             <p class="card-text"><small class="text-muted">ID продукта: ${data.id}</small></p>
+                            <hr>
+                            <h5>Детали:</h5>
+                            <ul>
+                                <li>Скидка: до 50%</li>
+                                <li>Условия: подробности уточняйте у консультанта</li>
+                            </ul>
                         </div>
                     </div>
                 </div>

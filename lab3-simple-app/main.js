@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    console.log('Страница загружена, создаем MainPage');
     const mainPage = new MainPage(root);
     mainPage.render();
 });
