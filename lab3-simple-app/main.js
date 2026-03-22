@@ -1,12 +1,14 @@
 import { MainPage } from "./pages/main/index.js";
 
-const root = document.getElementById('root');
+document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('root');
 
-// Проверка: нашелся ли элемент root?
-console.log('Root element:', root);
+    if (!root) {
+        console.error('Элемент root не найден!');
+        return;
+    }
 
-const mainPage = new MainPage(root);
-mainPage.render();
-
-// Проверка: добавилась ли кнопка?
-console.log('After render, root innerHTML:', root.innerHTML);
+    console.log('Страница загружена, создаем MainPage');
+    const mainPage = new MainPage(root);
+    mainPage.render();
+});
