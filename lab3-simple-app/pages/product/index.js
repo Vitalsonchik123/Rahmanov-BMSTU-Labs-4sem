@@ -1,5 +1,6 @@
 import { HeaderComponent } from "../../components/header/index.js";
 import { ProductComponent } from "../../components/product/index.js";
+import { ThreeModelComponent } from "../../components/3Dmodel/index.js";
 import { MainPage } from "../main/index.js";
 
 export class ProductPage {
@@ -9,29 +10,32 @@ export class ProductPage {
     }
 
     getData() {
-        // Mock данные для детальной страницы
         const productsData = {
             1: {
                 src: "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=540&h=360&fit=crop",
                 title: "Скидка на мониторы",
-                text: "Здесь будет представлено подробное описание первой акции"
+                text: "Скидка до 50% на все мониторы!",
+                modelPath: "./models/computer.glb"
             },
             2: {
                 src: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=540&h=360&fit=crop",
                 title: "Акция на флешки",
-                text: "Здесь будет представлено подробное описание второй акции"
+                text: "Купи 2 флешки - получи 3-ю в подарок!",
+                modelPath: "./models/computer.glb"
             },
             3: {
                 src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=540&h=360&fit=crop",
                 title: "Распродажа комплектующих",
-                text: "Здесь будет представлено подробное описание третьей акции"
+                text: "Скидка 30% на весь ассортимент!",
+                modelPath: "./models/computer.glb"
             }
         };
 
         const defaultData = {
             src: "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=540&h=360&fit=crop",
             title: `Акция ${this.id}`,
-            text: "Подробное описание акции. Здесь может быть много текста с деталями предложения, условиями участия и другой полезной информацией."
+            text: "Подробное описание акции...",
+            modelPath: "./models/computer.glb"
         };
 
         return {
@@ -44,10 +48,20 @@ export class ProductPage {
         return document.getElementById('product-page');
     }
 
-    getHTML() {
+    getHTML() {  // контейнер для 3D модели
         return (
             `
-            <div id="product-page" class="container py-3"></div>
+            <div id="product-page" class="container py-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="product-info-container"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="mb-3"> 3D Модель товара</h4>
+                        <div id="three-model-container"></div>
+                    </div>
+                </div>
+            </div>
             `
         );
     }
@@ -57,6 +71,7 @@ export class ProductPage {
         mainPage.render();
     }
 
+    // добавлен рендер 3D модели
     render() {
         console.log(`Рендерим страницу продукта с id: ${this.id}`);
 
@@ -70,9 +85,17 @@ export class ProductPage {
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
 
-        // Добавляем детальную информацию о продукте
+        // Получаем контейнеры
+        const productContainer = document.getElementById('product-info-container');
+        const modelContainer = document.getElementById('three-model-container');
+
+        // Добавляем информацию о продукте
         const data = this.getData();
-        const product = new ProductComponent(this.pageRoot);
+        const product = new ProductComponent(productContainer);
         product.render(data);
+
+        // Добавляем 3D модель
+        const threeModel = new ThreeModelComponent(modelContainer, data.modelPath);
+        threeModel.render();
     }
 }
