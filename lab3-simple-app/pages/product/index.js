@@ -70,7 +70,7 @@ getData() {
         return (
             `
             <div id="product-page" class="container py-3">
-                <!-- ДОБАВЛЕНО: Кнопка "Назад" -->
+                <!-- кнопка "Назад" -->
                 <div class="mb-3">
                     <button id="back-button" class="btn btn-secondary">← Назад к акциям</button>
                 </div>
@@ -80,7 +80,7 @@ getData() {
                         <div id="product-info-container"></div>
                     </div>
                     <div class="col-md-6">
-                        <h4 class="mb-3"> 3D Модель товара</h4>
+                        <h4 class="mb-3"> 3D Модель </h4>
                         <div id="three-model-container"></div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@ getData() {
         mainPage.render();
     }
 
-    // добавлен рендер 3D модели
+    // добавляем рендер 3D модели
     render() {
         console.log(`Рендерим страницу продукта с id: ${this.id}`);
 
@@ -127,7 +127,7 @@ getData() {
         const threeModel = new ThreeModelComponent(modelContainer, data.modelPath);
         threeModel.render();
 
-        // ДОБАВЛЕНО: Обработчик для кнопки "Назад"
+        // Обработчик для кнопки "Назад"
         const backButton = document.getElementById('back-button');
         if (backButton) {
             backButton.addEventListener('click', () => this.goBack());
