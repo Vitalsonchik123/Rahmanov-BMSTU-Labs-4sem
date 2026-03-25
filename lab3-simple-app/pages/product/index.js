@@ -9,34 +9,52 @@ export class ProductPage {
         this.id = parseInt(id);
     }
 
-    getData() {
-        const productsData = {
-            1: {
-                src: "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=540&h=360&fit=crop",
-                title: "Скидка на мониторы",
-                text: "Скидка до 50% на все мониторы!",
-                modelPath: "./models/computer.glb"
-            },
-            2: {
-                src: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=540&h=360&fit=crop",
-                title: "Акция на флешки",
-                text: "Купи 2 флешки - получи 3-ю в подарок!",
-                modelPath: "./models/computer.glb"
-            },
-            3: {
-                src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=540&h=360&fit=crop",
-                title: "Распродажа комплектующих",
-                text: "Скидка 30% на весь ассортимент!",
-                modelPath: "./models/computer.glb"
-            }
-        };
-
-        const defaultData = {
-            src: "https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=540&h=360&fit=crop",
-            title: `Акция ${this.id}`,
-            text: "Подробное описание акции...",
+getData() {
+    const productsData = {
+        1: {
+            src: "https://3dnews.ru/assets/external/illustrations/2014/12/29/907415/ASUS-PQ321QE.jpg",
+            title: "Скидка на мониторы",
+            text: "Скидка до 50% на все мониторы!",
+            discount: 50,
             modelPath: "./models/computer.glb"
-        };
+        },
+        2: {
+            src: "https://s.a-5.ru/i/file/161/7/4f/73/4f73f292cd213e35.jpg",
+            title: "Акция на флешки",
+            text: "Купи 2 флешки - получи 3-ю в подарок!",
+            discount: 10,
+            modelPath: "./models/computer.glb"
+        },
+        3: {
+            src: "https://img.ixbt.site/live/topics/preview/00/01/10/24/cefc407d3e.jpg",
+            title: "Распродажа комплектующих",
+            text: "Скидка 30% на весь ассортимент!",
+            discount: 30,
+            modelPath: "./models/computer.glb"
+        },
+        4: {
+            src: "https://img.freepik.com/free-psd/birthday-colorful-present-box-design_23-2150318126.jpg",
+            title: "Подарок при покупке",
+            text: "При заказе от 5000 руб.",
+            discount: 0,
+            modelPath: "./models/computer.glb"
+        },
+        5: {
+            src: "https://eliteextra.com/wp-content/uploads/2022/05/AdobeStock_384368336-scaled.jpeg",
+            title: "Бесплатная доставка",
+            text: "Бесплатная доставка при заказе от 3000 руб!",
+            discount: 100,
+            modelPath: "./models/computer.glb"
+        }
+    };
+
+    const defaultData = {
+        src: "https://3dnews.ru/assets/external/illustrations/2014/12/29/907415/ASUS-PQ321QE.jpg",
+        title: `Акция ${this.id}`,
+        text: "Подробное описание акции...",
+        discount: 0,
+        modelPath: "./models/computer.glb"
+    };
 
         return {
             id: this.id,
@@ -52,6 +70,11 @@ export class ProductPage {
         return (
             `
             <div id="product-page" class="container py-3">
+                <!-- ДОБАВЛЕНО: Кнопка "Назад" -->
+                <div class="mb-3">
+                    <button id="back-button" class="btn btn-secondary">← Назад к акциям</button>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div id="product-info-container"></div>
@@ -67,6 +90,12 @@ export class ProductPage {
     }
 
     goToHome() {
+        const mainPage = new MainPage(this.parent);
+        mainPage.render();
+    }
+
+    // метод кнопки "Назад"
+    goBack() {
         const mainPage = new MainPage(this.parent);
         mainPage.render();
     }
@@ -97,5 +126,11 @@ export class ProductPage {
         // Добавляем 3D модель
         const threeModel = new ThreeModelComponent(modelContainer, data.modelPath);
         threeModel.render();
+
+        // ДОБАВЛЕНО: Обработчик для кнопки "Назад"
+        const backButton = document.getElementById('back-button');
+        if (backButton) {
+            backButton.addEventListener('click', () => this.goBack());
+        }
     }
 }

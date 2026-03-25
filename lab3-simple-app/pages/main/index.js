@@ -291,11 +291,8 @@ export class MainPage {
                 message: "Введите промокод для проверки"
             };
         }
-
         const allPromoCodes = this.products.flatMap(product => product.promoCodes || []);
-
         const uniquePromoCodes = [...new Set(allPromoCodes)]; // убираем дубликаты
-
         let matchingCodes = [];
         let index = 0;
 
@@ -320,7 +317,6 @@ export class MainPage {
             }
             index++;
         }
-
         const result = {
             enteredCode: enteredCode,
             count: matchingCodes.length,
@@ -328,9 +324,10 @@ export class MainPage {
             allPromoCodes: uniquePromoCodes,
             isSuccessful: matchingCodes.length > 0
         };
-
         return result;
     }
+
+
 
     render() {
         console.log('Рендерим главную страницу');
