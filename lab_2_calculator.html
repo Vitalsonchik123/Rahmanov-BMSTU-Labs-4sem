@@ -29,6 +29,7 @@
         margin: 0;
         flex-direction: column;
         position: relative; /* добавляем для позиционирования кнопок */
+        padding-top: 80px; /* отступ сверху, чтобы меню не перекрывало контент */
     }
 
     /* hover - это состояние элемента, когда на него наведен курсор */
@@ -83,14 +84,12 @@
 
     /* Светлая тема (по умолчанию) */
     body.light-theme {
-    background-color: #ffffff;
-    transition: background-color 0.3s;
+      background-color: #ffffff;
     }
 
     /* Темная тема */
     body.dark-theme {
-    background-color: #333333;
-    transition: background-color 0.3s;
+      background-color: #333333;
     }
 
     /* Кнопки в светлой теме */
@@ -116,7 +115,7 @@
     /* Стиль для кнопки темы */
     #btn_theme {
       position: absolute;
-      top: 20px;
+      top: 100px;
       right: 20px;
       width: 300px;
       height: 70px;
@@ -136,7 +135,7 @@
     /* Стиль для кнопки GitHub */
     .github-btn {
         position: absolute;
-        top: 100px;
+        top: 180px;
         right: 20px;
         width: 300px;
         height: 70px;
@@ -150,6 +149,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        text-decoration: none;
     }
 
     .github-btn:hover {
@@ -159,10 +159,9 @@
     /* Контейнер для выпадающего блока с автором */
     .author-dropdown {
         position: absolute;
-        top: 180px; /* под кнопкой GitHub */
+        top: 260px;
         right: 20px;
         width: 300px;
-
         font-family: Calibri, Helvetica, sans-serif;
     }
 
@@ -172,7 +171,7 @@
         margin-bottom: 10px;
         overflow: hidden;
         background: #fff;
-        border-radius: 15px; /* добавляем закругление как у кнопок */
+        border-radius: 15px;
     }
 
     body.dark-theme .author-dropdown details {
@@ -187,7 +186,7 @@
         font-size: 1.3rem;
         cursor: pointer;
         text-align: center;
-        border-radius: 15px; /* добавляем закругление */
+        border-radius: 15px;
     }
 
     .author-dropdown summary:hover {
@@ -200,8 +199,8 @@
         font-size: 1.1rem;
         line-height: 1.5;
         text-align: center;
-        border-bottom-left-radius: 15px; /* закругляем нижние углы */
-        border-bottom-right-radius: 15px; /* закругляем нижние углы */
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
     }
 
     body.dark-theme .author-dropdown .details-content {
@@ -274,18 +273,6 @@
       font-weight: bold;
     }
 
-    /* Стили для подписи с ФИО при разных темах */
-    .signature {
-      margin-top: 20px;
-      text-align: center;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #000000; /* черный цвет для светлой темы */
-    }
-
-    body.dark-theme .signature {
-      color: #ffffff; /* белый цвет для темной темы */
-    }
-
     /* Контейнер для кнопок калькулятора*/
     .buttons-container {
       display: flex;
@@ -308,26 +295,170 @@
       background: #da8c2e;
     }
 
-    /* Стили для картинки */
-    .author-image {
-      position: absolute;
-      top: 390px;
-      right: 20px;
-      width: 300px;
+    /* ========== СТИЛИ ДЛЯ ВЕРХНЕГО МЕНЮ ========== */
+    .top-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #fe8c01;
+      padding: 12px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .menu-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .menu-item {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.3rem;
+      font-family: Calibri, Helvetica, sans-serif;
+      font-weight: bold;
+      padding: 10px 30px;
+      cursor: pointer;
+      border-radius: 25px;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .menu-item.active {
+      background: white;
+      color: #fe8c01;
+    }
+
+    body.dark-theme .menu-item.active {
+      background: #fe8c01;
+      color: white;
+    }
+
+    /* ========== СТИЛИ ДЛЯ СТРАНИЦ ========== */
+    .page {
+      display: none;
+      width: 100%;
+    }
+
+    .page.active-page {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ========== СТИЛИ ДЛЯ ЗАКАЗОВ (КАРТОЧКИ В 1 СТОЛБЕЦ) ========== */
+    .orders-container {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .orders-title {
+      font-size: 2rem;
+      font-family: Calibri, Helvetica, sans-serif;
+      color: #fe8c01;
       text-align: center;
+      margin-bottom: 30px;
+      font-weight: bold;
     }
 
-    .author-image img {
-      max-width: 100%;
+    .orders-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
 
-    body.dark-theme .author-image img {
-      border-color: #da8c2e;
+    .order-card {
+      background: #f5f5f5;
+      border-radius: 10px;
+      padding: 15px 20px;
+      border-left: 4px solid #fe8c01;
+      font-family: Calibri, Helvetica, sans-serif;
+    }
+
+    body.dark-theme .order-card {
+      background: #444;
+      color: #fff;
+    }
+
+    .order-number {
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #fe8c01;
+      margin-bottom: 5px;
+    }
+
+    .order-name {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 70px;
+      }
+
+      .main-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .menu-container {
+        gap: 15px;
+      }
+
+      .menu-item {
+        padding: 8px 20px;
+        font-size: 1rem;
+      }
+
+      .orders-container {
+        padding: 10px;
+      }
+
+      #btn_theme, .github-btn, .author-dropdown {
+        position: static;
+        margin: 10px auto;
+      }
+    }
+
+    /* Дополнительные стили для калькулятора на отдельной странице */
+    .calculator-page-container {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .calculator-page-container {
+        flex-direction: column;
+        align-items: center;
+      }
     }
   </style>
 </head>
 
 <body class="light-theme">
+  <!-- Верхнее меню -->
+  <div class="top-menu">
+    <div class="menu-container">
+      <button class="menu-item active" data-page="calculator">Калькулятор</button>
+      <button class="menu-item" data-page="orders">Заказы</button>
+    </div>
+  </div>
+
   <!-- Кнопка темы -->
   <button id="btn_theme" class="my-btn secondary">Тёмная тема</button>
 
@@ -345,82 +476,87 @@
     </details>
   </div>
 
-  <!-- Картинка под блоком автора -->
-  <div class="author-image">
-    <img src="C:\Users\Счастливый\Desktop\b9325239-4910-40ef-baf2-d45b9ee6c547.jpg" alt="картинка">
-  </div>
+  <!-- Страница калькулятора -->
+  <div id="calculator-page" class="page active-page">
+    <div class="calculator-page-container">
+      <div class="info-container">
+        <div class="goal-section">
+          <div class="goal-title">Цель лабораторной работы</div>
+          <p class="goal-text">
+            Цель данной лабораторной работы - <span class="highlight">знакомство</span>
+            с инструментами построения пользовательских интерфейсов web-сайтов:
+            <span class="highlight">HTML</span>, <span class="highlight">CSS</span>.
+            В ходе выполнения работы, вам предстоит ознакомиться с кодом реализации
+            простого калькулятора, и затем выполнить задания по варианту.
+          </p>
+        </div>
+      </div>
 
-  <div class="main-container">
-    <div class="info-container">
-      <div class="goal-section">
-        <div class="goal-title">Цель лабораторной работы</div>
-        <p class="goal-text">
-          Цель данной лабораторной работы - <span class="highlight">знакомство</span>
-          с инструментами построения пользовательских интерфейсов web-сайтов:
-          <span class="highlight">HTML</span>, <span class="highlight">CSS</span>.
-          В ходе выполнения работы, вам предстоит ознакомиться с кодом реализации
-          простого калькулятора, и затем выполнить задания по варианту.
-        </p>
+      <!-- Правая часть с калькулятором -->
+      <div class="calculator-container">
+        <!-- блок с экраном калькулятора, где будет выводиться результат вычислений. -->
+        <div id="result" class="result">
+          0
+        </div>
+
+        <!-- блок с кнопками калькулятора. -->
+        <div class="buttons-container">
+          <div class="button-row">
+            <button id="btn_op_sqrt" class="my-btn secondary">√</button>
+            <button id="btn_op_square" class="my-btn secondary">x²</button>
+            <button id="btn_op_factorial" class="my-btn secondary">x!</button>
+            <button id="btn_digit_000" class="my-btn secondary">000</button>
+          </div>
+
+          <div class="button-row">
+            <button id="btn_op_clear" class="my-btn secondary">C</button>
+            <button id="btn_op_sign" class="my-btn secondary">+/-</button>
+            <button id="btn_op_percent" class="my-btn secondary">%</button>
+            <button id="btn_del" class="my-btn secondary del-btn">del</button>
+          </div>
+
+          <div class="button-row">
+            <button id="btn_digit_7" class="my-btn">7</button>
+            <button id="btn_digit_8" class="my-btn">8</button>
+            <button id="btn_digit_9" class="my-btn">9</button>
+            <button id="btn_op_div" class="my-btn primary">/</button>
+          </div>
+
+          <div class="button-row">
+            <button id="btn_digit_4" class="my-btn">4</button>
+            <button id="btn_digit_5" class="my-btn">5</button>
+            <button id="btn_digit_6" class="my-btn">6</button>
+            <button id="btn_op_mult" class="my-btn primary">x</button>
+          </div>
+
+          <div class="button-row">
+            <button id="btn_digit_1" class="my-btn">1</button>
+            <button id="btn_digit_2" class="my-btn">2</button>
+            <button id="btn_digit_3" class="my-btn">3</button>
+            <button id="btn_op_minus" class="my-btn primary">-</button>
+          </div>
+
+          <div class="button-row">
+            <button id="btn_digit_0" class="my-btn">0</button>
+            <button id="btn_digit_dot" class="my-btn">.</button>
+            <button id="btn_op_equal" class="my-btn primary execute">=</button>
+            <button id="btn_op_plus" class="my-btn primary">+</button>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Правая часть с калькулятором -->
-    <div class="calculator-container">
-      <!-- блок с экраном калькулятора, где будет выводиться результат вычислений. -->
-      <div id="result" class="result">
-        0
-      </div>
-
-      <!-- блок с кнопками калькулятора. -->
-      <div class="buttons-container">
-        <div class="button-row">
-          <button id="btn_op_sqrt" class="my-btn secondary">√</button>
-          <button id="btn_op_square" class="my-btn secondary">x²</button>
-          <button id="btn_op_factorial" class="my-btn secondary">x!</button>
-          <button id="btn_digit_000" class="my-btn secondary">000</button>
-        </div>
-
-        <div class="button-row">
-          <button id="btn_op_clear" class="my-btn secondary">C</button>
-          <button id="btn_op_sign" class="my-btn secondary">+/-</button>
-          <button id="btn_op_percent" class="my-btn secondary">%</button>
-          <button id="btn_del" class="my-btn secondary del-btn">del</button>
-        </div>
-
-        <div class="button-row">
-          <button id="btn_digit_7" class="my-btn">7</button>
-          <button id="btn_digit_8" class="my-btn">8</button>
-          <button id="btn_digit_9" class="my-btn">9</button>
-          <button id="btn_op_div" class="my-btn primary">/</button>
-        </div>
-
-        <div class="button-row">
-          <button id="btn_digit_4" class="my-btn">4</button>
-          <button id="btn_digit_5" class="my-btn">5</button>
-          <button id="btn_digit_6" class="my-btn">6</button>
-          <button id="btn_op_mult" class="my-btn primary">x</button>
-        </div>
-
-        <div class="button-row">
-          <button id="btn_digit_1" class="my-btn">1</button>
-          <button id="btn_digit_2" class="my-btn">2</button>
-          <button id="btn_digit_3" class="my-btn">3</button>
-          <button id="btn_op_minus" class="my-btn primary">-</button>
-        </div>
-
-        <div class="button-row">
-          <button id="btn_digit_0" class="my-btn">0</button>
-          <button id="btn_digit_dot" class="my-btn">.</button>
-          <button id="btn_op_equal" class="my-btn primary execute">=</button>
-          <button id="btn_op_plus" class="my-btn primary">+</button>
-        </div>
-      </div>
+  <!-- Страница заказов -->
+  <div id="orders-page" class="page">
+    <div class="orders-container">
+      <div class="orders-title"> Заказы комплектующих</div>
+      <div class="orders-list" id="orders-list"></div>
     </div>
   </div>
 
-  <!-- Скрипт для переключения темы -->
+  <!-- Скрипт -->
   <script src="lab_2_calculator.js"></script>
-
 </body>
 
 </html>

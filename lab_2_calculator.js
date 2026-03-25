@@ -27,18 +27,15 @@ window.onload = function() {
 
             // Проверяем, не пытаемся ли мы добавить вторую точку
             if (digit !== '.' || (digit === '.' && !a.includes('.'))) {
-                // здесь у нас происходит складывание сохраненного уже числа и нажатой цифры. Оба поля string, поэтому
-                // каждый раз цифра записывается в конец строки. Например: a = '14', digit = '5',
-                // a += digit - это короткая запись a = a + digit - поэтомоу после этой операции a = '145'
                 a += digit;
             }
-            outputElement.innerHTML = a || '0'; // если a пустое, показываем 0
+            outputElement.innerHTML = a || '0';
         }
         // Если операция выбрана, работаем со вторым числом (b)
         else {
             // Проверяем, не превысит ли добавление цифры лимит
             if (b.length >= MAX_DIGITS) {
-                return; // Игнорируем нажатие, если достигнут лимит
+                return;
             }
 
             if (digit !== '.' || (digit === '.' && !b.includes('.'))) {
@@ -51,19 +48,16 @@ window.onload = function() {
 // ШАГ 4: Настройка обработчиков событий для кнопок
     digitButtons.forEach(button => {
         button.onclick = function() {
-            // берем текст, написанный на кнопке - он и является цифрой
             const digitValue = button.innerHTML;
             onDigitButtonClicked(digitValue);
         };
     });
 
-    // Настраиваем обработчики для кнопок операций - сохраняем выбранную операцию
-    // в ранее созданную переменную selectedOperation
     document.getElementById("btn_op_mult").onclick = function() {
         if (a === '') {
-            return; //если первое число не введено, игнорируем
+            return;
         }
-        if (selectedOperation && b !== '') { //если уже есть выбранная операция и второе число не пустое, сразу вычисляем предыдущую операцию
+        if (selectedOperation && b !== '') {
             calculateResult();
         }
         selectedOperation = 'x';
@@ -94,7 +88,6 @@ window.onload = function() {
     };
 
 // ШАГ 5: Кнопка очистки
-    // Очищаем все значения при нажатии на кнопку C (вешаем обработчик события click на кнопку С)
     document.getElementById("btn_op_clear").onclick = function() {
         a = '';
         b = '';
@@ -103,40 +96,32 @@ window.onload = function() {
         outputElement.innerHTML = '0';
     };
 
-    // Кнопка del
     document.getElementById("btn_del").onclick = function() {
         if (!selectedOperation) {
-            // Работаем с первым числом
             if (a.length > 0) {
-                a = a.slice(0, -1); // удаляем последний символ
+                a = a.slice(0, -1);
                 outputElement.innerHTML = a || '0';
             }
         } else {
-            // Работаем со вторым числом
             if (b.length > 0) {
-                b = b.slice(0, -1); // удаляем последний символ
+                b = b.slice(0, -1);
                 outputElement.innerHTML = b || '0';
             }
         }
     };
 
-    // Кнопка смены знака (+/-)
     document.getElementById("btn_op_sign").onclick = function() {
         if (!selectedOperation) {
-            // Работаем с первым числом
             if (a !== '') {
                 a = (parseFloat(a) * -1).toString();
-                // Ограничиваем длину результата
                 if (a.length > MAX_DIGITS) {
                     a = a.substring(0, MAX_DIGITS);
                 }
                 outputElement.innerHTML = a;
             }
         } else {
-            // Работаем со вторым числом
             if (b !== '') {
                 b = (parseFloat(b) * -1).toString();
-                // Ограничиваем длину результата
                 if (b.length > MAX_DIGITS) {
                     b = b.substring(0, MAX_DIGITS);
                 }
@@ -145,23 +130,18 @@ window.onload = function() {
         }
     };
 
-    // Кнопка процента (%)
     document.getElementById("btn_op_percent").onclick = function() {
         if (!selectedOperation) {
-            // Если операция не выбрана, просто делим число на 100
             if (a !== '') {
                 a = (parseFloat(a) / 100).toString();
-                // Ограничиваем длину результата
                 if (a.length > MAX_DIGITS) {
                     a = a.substring(0, MAX_DIGITS);
                 }
                 outputElement.innerHTML = a;
             }
         } else {
-            // Если операция выбрана, работаем со вторым числом
             if (b !== '') {
                 b = (parseFloat(b) / 100).toString();
-                // Ограничиваем длину результата
                 if (b.length > MAX_DIGITS) {
                     b = b.substring(0, MAX_DIGITS);
                 }
@@ -170,18 +150,14 @@ window.onload = function() {
         }
     };
 
-// Функция вычисления результата
     function calculateResult() {
-        // Проверяем, что у нас есть оба числа и операция
         if (a === '' || b === '' || !selectedOperation) {
             return false;
         }
 
-        // Преобразуем строки в числа для вычисления
         const num1 = parseFloat(a);
         const num2 = parseFloat(b);
 
-        // Выполняем выбранную операцию
         switch(selectedOperation) {
             case 'x':
                 expressionResult = num1 * num2;
@@ -193,7 +169,6 @@ window.onload = function() {
                 expressionResult = num1 - num2;
                 break;
             case '/':
-                // Проверка деления на ноль
                 if (num2 === 0) {
                     alert('Ошибка: деление на ноль!');
                     return false;
@@ -204,33 +179,25 @@ window.onload = function() {
                 return false;
         }
 
-        // Сохраняем результат и очищаем второе число
         a = expressionResult.toString();
-
-        // Ограничиваем длину результата
         if (a.length > MAX_DIGITS) {
             a = a.substring(0, MAX_DIGITS);
         }
 
         b = '';
         selectedOperation = null;
-
         outputElement.innerHTML = a;
         return true;
     }
 
-    //Кнопка равно (=)
     document.getElementById("btn_op_equal").onclick = function() {
         calculateResult();
     };
 
-    //Квадратный корень (√)
     document.getElementById("btn_op_sqrt").onclick = function() {
-        // Определяем, с каким числом работаем
         let currentNum = !selectedOperation ? a : b;
 
         if (currentNum === '') {
-            // Если число не введено, используем результат или 0
             currentNum = expressionResult !== '' ? expressionResult : '0';
         }
 
@@ -242,8 +209,6 @@ window.onload = function() {
         }
 
         const result = Math.sqrt(num).toString();
-
-        // Ограничиваем длину результата
         const finalResult = result.length > MAX_DIGITS ? result.substring(0, MAX_DIGITS) : result;
 
         if (!selectedOperation) {
@@ -255,20 +220,15 @@ window.onload = function() {
         }
     };
 
-    //Возведение в квадрат (x²)
     document.getElementById("btn_op_square").onclick = function() {
-        // Определяем, с каким числом работаем
         let currentNum = !selectedOperation ? a : b;
 
         if (currentNum === '') {
-            // Если число не введено, используем результат или 0
             currentNum = expressionResult !== '' ? expressionResult : '0';
         }
 
         const num = parseFloat(currentNum);
         const result = (num * num).toString();
-
-        // Ограничиваем длину результата
         const finalResult = result.length > MAX_DIGITS ? result.substring(0, MAX_DIGITS) : result;
 
         if (!selectedOperation) {
@@ -280,38 +240,31 @@ window.onload = function() {
         }
     };
 
-    //Факториал (x!)
     document.getElementById("btn_op_factorial").onclick = function() {
-        // Определяем, с каким числом работаем
         let currentNum = !selectedOperation ? a : b;
 
         if (currentNum === '') {
-            // Если число не введено, используем результат или 0
             currentNum = expressionResult !== '' ? expressionResult : '0';
         }
 
         const num = parseFloat(currentNum);
 
-        // Проверка, что число целое и неотрицательное
         if (!Number.isInteger(num) || num < 0) {
             alert('Ошибка: факториал вычисляется только для целых неотрицательных чисел!');
             return;
         }
 
-        if (num > 170) { // Факториал чисел больше 170 приводит к бесконечности в JavaScript
+        if (num > 170) {
             alert('Ошибка: число слишком большое для вычисления факториала!');
             return;
         }
 
-        // Вычисление факториала
         let factorial = 1;
         for (let i = 2; i <= num; i++) {
             factorial *= i;
         }
 
         const result = factorial.toString();
-
-        // Ограничиваем длину результата
         const finalResult = result.length > MAX_DIGITS ? result.substring(0, MAX_DIGITS) : result;
 
         if (!selectedOperation) {
@@ -323,16 +276,13 @@ window.onload = function() {
         }
     };
 
-    //Три нуля
     document.getElementById("btn_digit_000").onclick = function() {
         if (!selectedOperation) {
-            // Работаем с первым числом
             if (a.length + 3 <= MAX_DIGITS) {
                 a += '000';
                 outputElement.innerHTML = a;
             }
         } else {
-            // Работаем со вторым числом
             if (b.length + 3 <= MAX_DIGITS) {
                 b += '000';
                 outputElement.innerHTML = b;
@@ -340,18 +290,14 @@ window.onload = function() {
         }
     };
 
-    //Функция для обработки клавиатуры
-    document.addEventListener('keydown', function(event) {  //всё время считывать нажате клавиш
+    document.addEventListener('keydown', function(event) {
         const key = event.key;
-        //Цифры от 0 до 9
         if (key >= '0' && key <= '9') {
             onDigitButtonClicked(key);
         }
-        //Десятичная точка
         else if (key === '.') {
             onDigitButtonClicked('.');
         }
-        //Операции
         else if (key === '+') {
             document.getElementById("btn_op_plus").onclick();
         }
@@ -364,15 +310,12 @@ window.onload = function() {
         else if (key === '/') {
             document.getElementById("btn_op_div").onclick();
         }
-        //Enter для равно
         else if (key === 'Enter' || key === '=') {
             calculateResult();
         }
-        //Escape для очистки
         else if (key === 'Escape' || key === 'c' || key === 'C') {
             document.getElementById("btn_op_clear").onclick();
         }
-        //Backspace для удаления последнего символа
         else if (key === 'Backspace') {
             document.getElementById("btn_del").onclick();
         }
@@ -382,7 +325,6 @@ window.onload = function() {
     const themeButton = document.getElementById('btn_theme');
     const body = document.body;
 
-    //Класс светлой темы по умолчанию
     body.classList.add('light-theme');
 
     themeButton.addEventListener('click', function() {
@@ -396,4 +338,58 @@ window.onload = function() {
             themeButton.textContent = 'Тёмная тема';
         }
     });
+
+    // ========== ЛОГИКА ЗАКАЗОВ И МЕНЮ ==========
+
+    const orders = [
+        { id: 1, name: "Процессор AMD Ryzen 9 7950X" },
+        { id: 2, name: "Видеокарта NVIDIA GeForce RTX 4080 SUPER" },
+        { id: 3, name: "Оперативная память DDR5 32 ГБ (2x16)" },
+        { id: 4, name: "SSD NVMe Samsung 990 PRO 2 ТБ" },
+        { id: 5, name: "Материнская плата ASUS ROG STRIX B650E-F" },
+        { id: 6, name: "Блок питания Corsair RM850x 850W" },
+        { id: 7, name: "Кулер Noctua NH-D15" },
+        { id: 8, name: "Корпус Fractal Design North" },
+        { id: 9, name: "Монитор ASUS ROG Swift 27\" 240 Гц" },
+        { id: 10, name: "Клавиатура механическая Logitech G Pro X" }
+    ];
+
+    function renderOrders() {
+        const ordersList = document.getElementById('orders-list');
+        if (!ordersList) return;
+
+        ordersList.innerHTML = orders.map(order => `
+            <div class="order-card">
+                <div class="order-number">Заказ #${order.id}</div>
+                <div class="order-name">${order.name}</div>
+            </div>
+        `).join('');
+    }
+
+    function switchPage(pageName) {
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active-page');
+        });
+
+        const activePage = document.getElementById(`${pageName}-page`);
+        if (activePage) {
+            activePage.classList.add('active-page');
+        }
+
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('data-page') === pageName) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const pageName = item.getAttribute('data-page');
+            switchPage(pageName);
+        });
+    });
+
+    renderOrders();
 };
