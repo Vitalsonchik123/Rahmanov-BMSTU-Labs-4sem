@@ -17,7 +17,11 @@ export class ProductCardComponent {
                     <p class="card-text">${data.text}</p>
                     <div class="d-flex gap-2">
                         <button class="btn btn-success btn-sm detail-btn" data-id="${data.id}"> Подробнее</button>
-                        <button class="btn btn-danger btn-sm delete-btn" data-id="${data.id}"> Удалить</button>
+                        <button class="btn btn-sm delete-btn"
+                                data-id="${data.id}"
+                                style="background-color: #ff8c00; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                            Удалить
+                        </button>
                     </div>
                 </div>
             </div>
