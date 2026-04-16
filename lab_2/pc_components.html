@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Калькулятор + Задержка Пуассона</title>
+  <style>
+    /* опишем базовый стиль кнопки калькулятора */
+    .my-btn {
+      margin-right: 5px;
+      margin-top: 5px;
+      width: 63px;
+      height: 50px;
+      border-radius: 10px;
+      border: none;
+      background: rgb(27, 25, 25);
+      color: white;
+      font-size: 2rem;
+      font-family: Calibri, Helvetica, sans-serif;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        flex-direction: column;
+        position: relative;
+        padding-top: 80px;
+    }
+
+    .my-btn:hover {
+      background: rgb(65, 63, 63);
+    }
+
+    .my-btn:active {
+      filter: brightness(130%);
+    }
+
+    .my-btn.primary {
+      background: #16c645;
+    }
+
+    .my-btn.primary:hover {
+      background: #1fa53f;
+    }
+
+    .my-btn.secondary {
+      background: #fe8c01;
+    }
+
+    .my-btn.secondary:hover {
+      background: #da8c2e;
+    }
+
+    .my-btn.execute {
+      width: 63px;
+      border-radius: 10px;
+    }
+
+    .result {
+      width: 267px;
+      height: 70px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      padding-right: 10px;
+      background: rgb(27, 25, 25);
+      text-align: right;
+      color: #ffffff;
+      font-size: 2rem;
+      font-family: Calibri, Helvetica, sans-serif;
+      line-height: 70px;
+      box-sizing: border-box;
+    }
+
+    body.light-theme {
+      background-color: #ffffff;
+    }
+
+    body.dark-theme {
+      background-color: #333333;
+    }
+
+    body.light-theme .my-btn:not(.primary):not(.secondary) {
+      background: #e0e0e0;
+      color: #000000;
+    }
+
+    body.light-theme .my-btn:not(.primary):not(.secondary):hover {
+      background: #c0c0c0;
+    }
+
+    body.dark-theme .my-btn:not(.primary):not(.secondary) {
+      background: rgb(27, 25, 25);
+      color: white;
+    }
+
+    body.dark-theme .my-btn:not(.primary):not(.secondary):hover {
+      background: rgb(65, 63, 63);
+    }
+
+    /* Кнопка темы – зелёная */
+    #btn_theme {
+      position: absolute;
+      top: 100px;
+      right: 20px;
+      width: 300px;
+      height: 70px;
+      border-radius: 15px;
+      font-size: 2rem;
+      font-weight: bold;
+      background: #16c645;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    #btn_theme:hover {
+      background: #1fa53f;
+    }
+
+    .github-btn {
+        position: absolute;
+        top: 180px;
+        right: 20px;
+        width: 300px;
+        height: 70px;
+        border-radius: 15px;
+        font-size: 2rem;
+        font-weight: bold;
+        font-family: Calibri, Helvetica, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    body.light-theme .github-btn {
+        background: #e0e0e0;
+        color: #000000;
+    }
+
+    body.light-theme .github-btn:hover {
+        background: #c0c0c0;
+    }
+
+    body.dark-theme .github-btn {
+        background: rgb(27, 25, 25);
+        color: white;
+    }
+
+    body.dark-theme .github-btn:hover {
+        background: rgb(65, 63, 63);
+    }
+
+    /* Блок "Автор" – зелёный */
+    .author-dropdown {
+        position: absolute;
+        top: 260px;
+        right: 20px;
+        width: 300px;
+        font-family: Calibri, Helvetica, sans-serif;
+    }
+
+    .author-dropdown details {
+        width: 100%;
+        margin-bottom: 10px;
+        overflow: hidden;
+        background: #16c645;
+        border-radius: 15px;
+    }
+
+    body.dark-theme .author-dropdown details {
+        background: #16c645;
+    }
+
+    .author-dropdown summary {
+        background: #16c645;
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        font-size: 1.3rem;
+        cursor: pointer;
+        text-align: center;
+        border-radius: 15px;
+        list-style: none;
+    }
+
+    .author-dropdown summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .author-dropdown summary:hover {
+        background: #1fa53f;
+    }
+
+    .author-dropdown .details-content {
+        padding: 15px;
+        background: rgba(22, 198, 69, 0.2);
+        font-size: 1.1rem;
+        line-height: 1.5;
+        text-align: center;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+
+    body.dark-theme .author-dropdown .details-content {
+        background: rgba(22, 198, 69, 0.3);
+        color: #fff;
+    }
+
+    .info-container {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .goal-section {
+      width: 300px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #f5f5f5;
+      font-family: Calibri, Helvetica, sans-serif;
+      line-height: 1.5;
+      box-sizing: border-box;
+    }
+
+    .goal-text {
+      text-align: justify;
+    }
+
+    body.dark-theme .goal-section {
+      background: #444;
+      color: #fff;
+    }
+
+    .goal-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #fe8c01;
+    }
+
+    .highlight {
+      background-color: #16c645;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .buttons-container {
+      display: flex;
+      flex-direction: column;
+      width: fit-content;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .my-btn.del-btn {
+      background: #fe8c01;
+    }
+
+    .my-btn.del-btn:hover {
+      background: #da8c2e;
+    }
+
+    /* ========== СТИЛИ ДЛЯ ВЕРХНЕГО МЕНЮ (ХЕДЕР) – НЕ МЕНЯЮТСЯ ПРИ СМЕНЕ ТЕМЫ ========== */
+    .top-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #16c645;
+      padding: 12px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .menu-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .menu-item {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.3rem;
+      font-family: Calibri, Helvetica, sans-serif;
+      font-weight: bold;
+      padding: 10px 30px;
+      cursor: pointer;
+      border-radius: 25px;
+      outline: none;
+      transition: none;
+    }
+
+    .menu-item:focus {
+      outline: none;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Активный пункт всегда белый с зелёным текстом, независимо от темы */
+    .menu-item.active {
+      background: white;
+      color: #16c645;
+    }
+
+    /* Убираем любые переопределения для тёмной темы */
+    body.dark-theme .menu-item.active {
+      background: white;
+      color: #16c645;
+    }
+
+    .page {
+      display: none;
+      width: 100%;
+    }
+
+    .page.active-page {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Страница Пуассона */
+    .poisson-container {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .poisson-card {
+      background: #f5f5f5;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 20px;
+      font-family: Calibri, Helvetica, sans-serif;
+    }
+
+    body.dark-theme .poisson-card {
+      background: #444;
+      color: #fff;
+    }
+
+    /* Заголовок страницы Пуассона – оранжевый, как .goal-title */
+    .poisson-title {
+      font-size: 2rem;
+      font-family: Calibri, Helvetica, sans-serif;
+      color: #fe8c01;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: white;
+      box-sizing: border-box;
+    }
+
+    body.dark-theme .input-group input {
+      background: #555;
+      color: white;
+      border-color: #777;
+    }
+
+    .poisson-result {
+      background: #e9ecef;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    body.dark-theme .poisson-result {
+      background: #2c2c2c;
+    }
+
+    /* Кнопка "Рассчитать задержку" – оранжевая */
+    .calc-btn {
+      background: #fe8c01;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .calc-btn:hover {
+      background: #da8c2e;
+    }
+
+    .calculator-page-container {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 70px;
+      }
+      .calculator-page-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .menu-container {
+        gap: 15px;
+      }
+      .menu-item {
+        padding: 8px 20px;
+        font-size: 1rem;
+      }
+      #btn_theme, .github-btn, .author-dropdown {
+        position: static;
+        margin: 10px auto;
+      }
+      .poisson-container {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body class="light-theme">
+  <!-- Верхнее меню (хедер) -->
+  <div class="top-menu">
+    <div class="menu-container">
+      <button class="menu-item active" data-page="calculator">Калькулятор</button>
+      <button class="menu-item" data-page="poisson">Пуассон</button>
+    </div>
+  </div>
+
+  <!-- Кнопка темы (зелёная) -->
+  <button id="btn_theme" class="my-btn">Тёмная тема</button>
+
+  <!-- Кнопка GitHub -->
+  <a href="https://github.com/Vitalsonchik123/Rahmanov-Sem4-Labs-2026" target="_blank" class="github-btn">GitHub</a>
+
+  <!-- Блок "Автор" (зелёный) -->
+  <div class="author-dropdown">
+    <details>
+      <summary>Автор</summary>
+      <div class="details-content">
+        <strong>ФИО:</strong> Рахманов Виталий Алексеевич<br>
+        <strong>Группа:</strong> ИУ5-41Б
+      </div>
+    </details>
+  </div>
+
+  <!-- Страница калькулятора -->
+  <div id="calculator-page" class="page active-page">
+    <div class="calculator-page-container">
+      <div class="info-container">
+        <div class="goal-section">
+          <div class="goal-title">Цель лабораторной работы</div>
+          <p class="goal-text">
+            Цель данной лабораторной работы - <span class="highlight">знакомство</span>
+            с инструментами построения пользовательских интерфейсов web-сайтов:
+            <span class="highlight">HTML</span>, <span class="highlight">CSS</span>.
+            В ходе выполнения работы, вам предстоит ознакомиться с кодом реализации
+            простого калькулятора, и затем выполнить задания по варианту.
+          </p>
+        </div>
+      </div>
+      <div class="calculator-container">
+        <div id="result" class="result">0</div>
+        <div class="buttons-container">
+          <div class="button-row">
+            <button id="btn_op_sqrt" class="my-btn secondary">√</button>
+            <button id="btn_op_square" class="my-btn secondary">x²</button>
+            <button id="btn_op_factorial" class="my-btn secondary">x!</button>
+            <button id="btn_digit_000" class="my-btn secondary">000</button>
+          </div>
+          <div class="button-row">
+            <button id="btn_op_clear" class="my-btn secondary">C</button>
+            <button id="btn_op_sign" class="my-btn secondary">+/-</button>
+            <button id="btn_op_percent" class="my-btn secondary">%</button>
+            <button id="btn_del" class="my-btn secondary del-btn">del</button>
+          </div>
+          <div class="button-row">
+            <button id="btn_digit_7" class="my-btn">7</button>
+            <button id="btn_digit_8" class="my-btn">8</button>
+            <button id="btn_digit_9" class="my-btn">9</button>
+            <button id="btn_op_div" class="my-btn primary">/</button>
+          </div>
+          <div class="button-row">
+            <button id="btn_digit_4" class="my-btn">4</button>
+            <button id="btn_digit_5" class="my-btn">5</button>
+            <button id="btn_digit_6" class="my-btn">6</button>
+            <button id="btn_op_mult" class="my-btn primary">x</button>
+          </div>
+          <div class="button-row">
+            <button id="btn_digit_1" class="my-btn">1</button>
+            <button id="btn_digit_2" class="my-btn">2</button>
+            <button id="btn_digit_3" class="my-btn">3</button>
+            <button id="btn_op_minus" class="my-btn primary">-</button>
+          </div>
+          <div class="button-row">
+            <button id="btn_digit_0" class="my-btn">0</button>
+            <button id="btn_digit_dot" class="my-btn">.</button>
+            <button id="btn_op_equal" class="my-btn primary execute">=</button>
+            <button id="btn_op_plus" class="my-btn primary">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Страница расчёта задержки по Пуассону -->
+  <div id="poisson-page" class="page">
+    <div class="poisson-container">
+      <div class="poisson-title">Задержка сети по Пуассону (M/M/1)</div>
+      <div class="poisson-card">
+        <div class="input-group">
+          <label>Интенсивность поступления λ (пакетов/сек):</label>
+          <input type="number" id="lambda" step="any" value="5" placeholder="например, 5">
+        </div>
+        <div class="input-group">
+          <label>Интенсивность обслуживания μ (пакетов/сек):</label>
+          <input type="number" id="mu" step="any" value="10" placeholder="например, 10">
+        </div>
+        <div class="input-group">
+          <label>Пороговое время T (сек) для расчёта вероятности задержки > T:</label>
+          <input type="number" id="threshold" step="any" value="0.2" placeholder="например, 0.2">
+        </div>
+        <button id="calcPoisson" class="calc-btn">Рассчитать задержку</button>
+        <div id="poissonResult" class="poisson-result">
+          <!-- результат будет выведен здесь -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="pc_components.js"></script>
+</body>
+
+</html>
