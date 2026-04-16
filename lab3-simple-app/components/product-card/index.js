@@ -17,11 +17,7 @@ export class ProductCardComponent {
                     <p class="card-text">${data.text}</p>
                     <div class="d-flex gap-2">
                         <button class="btn btn-success btn-sm detail-btn" data-id="${data.id}"> Подробнее</button>
-                        <button class="btn btn-sm delete-btn"
-                                data-id="${data.id}"
-                                style="background-color: #ff8c00; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
-                            Удалить
-                        </button>
+                        <button class="btn btn-orange btn-sm delete-btn" data-id="${data.id}"> Удалить</button>
                     </div>
                 </div>
             </div>
@@ -32,14 +28,12 @@ export class ProductCardComponent {
     addListeners(data, detailListener, deleteListener) {
         const detailButton = document.querySelector(`.detail-btn[data-id="${data.id}"]`);
         const deleteButton = document.querySelector(`.delete-btn[data-id="${data.id}"]`);
-
         if (detailButton) {
             detailButton.addEventListener("click", (e) => {
                 e.stopPropagation();
                 detailListener(data.id);
             });
         }
-
         if (deleteButton) {
             deleteButton.addEventListener("click", (e) => {
                 e.stopPropagation();
