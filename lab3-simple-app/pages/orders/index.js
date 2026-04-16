@@ -4,18 +4,10 @@ import { MainPage } from "../main/index.js";
 export class OrdersPage {
     constructor(parent) {
         this.parent = parent;
+        this.orders = this.getInitialOrders();
     }
 
-    getHTML() {
-        return `
-            <div class="orders-container">
-                <div class="orders-title">Заказы комплектующих</div>
-                <div class="orders-list" id="orders-list"></div>
-            </div>
-        `;
-    }
-
-    getOrdersData() {
+    getInitialOrders() {
         return [
             { id: 1, name: "Процессор AMD Ryzen 9 7950X" },
             { id: 2, name: "Видеокарта NVIDIA GeForce RTX 4080 SUPER" },
@@ -30,17 +22,54 @@ export class OrdersPage {
         ];
     }
 
+    getHTML() {
+        return `
+            <div class="orders-container">
+                <div class="orders-title">Заказы комплектующих</div>
+                <div class="orders-controls">
+                    <button id="add-order-button" class="btn btn-orange"> Добавить заказ</button>
+                </div>
+                <div class="orders-list" id="orders-list"></div>
+            </div>
+        `;
+    }
+
+    addOrder() {
+        if (this.orders.length === 0) return;
+        const firstOrder = this.orders[0];
+        const newId = Math.max(...this.orders.map(o => o.id)) + 1;
+        const newOrder = {
+            id: newId,
+            name: `${firstOrder.name} (копия)`
+        };
+        this.orders.push(newOrder);
+        this.renderOrders();
+    }
+
+    deleteOrder(id) {
+        this.orders = this.orders.filter(order => order.id !== id);
+        this.renderOrders();
+    }
+
     renderOrders() {
         const ordersList = document.getElementById('orders-list');
         if (!ordersList) return;
 
-        const orders = this.getOrdersData();
-        ordersList.innerHTML = orders.map(order => `
+        ordersList.innerHTML = this.orders.map(order => `
             <div class="order-card">
                 <div class="order-number">Заказ #${order.id}</div>
                 <div class="order-name">${order.name}</div>
+                <button class="btn-delete-order" data-id="${order.id}">🗑 Удалить</button>
             </div>
         `).join('');
+
+        // Добавляем слушатели на кнопки удаления
+        document.querySelectorAll('.btn-delete-order').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                this.deleteOrder(id);
+            });
+        });
     }
 
     goToHome() {
@@ -54,12 +83,15 @@ export class OrdersPage {
         const header = new HeaderComponent(this.parent);
         header.render(this.goToHome.bind(this), () => {
             // Обработчик для кнопки "Заказы комплектующих" – остаёмся на этой же странице
-            // Но если нужно обновить страницу, можно вызвать this.render() – но она и так уже здесь
-            // Ничего не делаем, так как мы уже на странице заказов
         });
 
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
+
+        const addButton = document.getElementById('add-order-button');
+        if (addButton) {
+            addButton.addEventListener('click', () => this.addOrder());
+        }
 
         this.renderOrders();
     }

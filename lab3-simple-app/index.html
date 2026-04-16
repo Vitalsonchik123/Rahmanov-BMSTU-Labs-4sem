@@ -67,9 +67,10 @@
         }
 
 
+
         /* Стили для страницы заказов */
         .orders-container {
-            max-width: 800px;
+            max-width: 800px;   /* сделано уже */
             width: 100%;
             margin: 0 auto;
             padding: 20px;
@@ -84,6 +85,11 @@
             font-weight: bold;
         }
 
+        .orders-controls {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
         .orders-list {
             display: flex;
             flex-direction: column;
@@ -95,6 +101,10 @@
             border-radius: 10px;
             padding: 15px 20px;
             border-left: 4px solid #fe8c01;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .order-number {
@@ -108,6 +118,23 @@
             font-size: 1.1rem;
             font-weight: 500;
             color: #000000;
+            flex-grow: 1;
+            margin-left: 15px;
+        }
+
+        .btn-delete-order {
+            background-color: #fe8c01;
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-delete-order:hover {
+            background-color: #da8c2e;
         }
     </style>
 </head>
