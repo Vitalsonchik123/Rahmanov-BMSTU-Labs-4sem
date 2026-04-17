@@ -2,62 +2,14 @@ import { HeaderComponent } from "../../components/header/index.js";
 import { ProductCardComponent } from "../../components/product-card/index.js";
 import { ProductPage } from "../product/index.js";
 import { OrdersPage } from "../orders/index.js";
+import { ajax } from "../../modules/ajax.js";
+import { stockUrls } from "../../modules/stockUrls.js";
 
 export class MainPage {
     constructor(parent) {
         this.parent = parent;
-        this.products = this.getInitialData();
-        this.filteredProducts = [...this.products];
-    }
-
-    getInitialData() {
-        return [
-            {
-                id: 1,
-                src: "https://3dnews.ru/assets/external/illustrations/2014/12/29/907415/ASUS-PQ321QE.jpg",
-                title: "Скидка на мониторы",
-                text: "Скидка до 50% на все мониторы!",
-                category: "комплектующие",
-                discount: 50,
-                promoCodes: ["sale", "sale50", "screen"]
-            },
-            {
-                id: 2,
-                src: "https://s.a-5.ru/i/file/161/7/4f/73/4f73f292cd213e35.jpg",
-                title: "Акция на флешки",
-                text: "Купи 2 флешки - получи 3-ю в подарок!",
-                category: "аксессуары",
-                discount: 10,
-                promoCodes: ["flash", "sale10", "drive"]
-            },
-            {
-                id: 3,
-                src: "https://img.ixbt.site/live/topics/preview/00/01/10/24/cefc407d3e.jpg",
-                title: "Распродажа комплектующих",
-                text: "Скидка 30% на весь ассортимент!",
-                category: "комплектующие",
-                discount: 30,
-                promoCodes: ["sale30", "saleAll"]
-            },
-            {
-                id: 4,
-                src: "https://img.freepik.com/free-psd/birthday-colorful-present-box-design_23-2150318126.jpg",
-                title: "Подарок при покупке",
-                text: "При заказе от 5000 руб.",
-                category: "акции",
-                discount: 0,
-                promoCodes: ["present"]
-            },
-            {
-                id: 5,
-                src: "https://eliteextra.com/wp-content/uploads/2022/05/AdobeStock_384368336-scaled.jpeg",
-                title: "Бесплатная доставка",
-                text: "Бесплатная доставка при заказе от 3000 руб!",
-                category: "акции",
-                discount: 100,
-                promoCodes: ["free", "delivery"]
-            },
-        ];
+        this.products = [];          // данные с API
+        this.filteredProducts = [];  // отфильтрованные данные
     }
 
     get pageRoot() {
@@ -71,10 +23,10 @@ export class MainPage {
                 <div class="container">
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <input type="text" id="filter-input" class="form-control filter-input" placeholder=" Фильтр по названию...">
+                            <input type="text" id="filter-input" class="form-control filter-input" placeholder="Фильтр по названию...">
                         </div>
                         <div class="col-md-6 text-end">
-                            <button id="add-button" class="btn btn-orange"> Добавить акцию</button>
+                            <button id="add-button" class="btn btn-orange">Добавить акцию</button>
                         </div>
                     </div>
 
@@ -82,7 +34,7 @@ export class MainPage {
                         <div class="col-md-4">
                             <div class="card h-100 border-green">
                                 <div class="card-header bg-white text-green border-green">
-                                    <strong> Задание 1.2</strong>
+                                    <strong>Задание 1.2</strong>
                                 </div>
                                 <div class="card-body">
                                     <p class="card-text">Подсчет повторяющихся категорий товаров</p>
@@ -94,7 +46,7 @@ export class MainPage {
                         <div class="col-md-4">
                             <div class="card h-100 border-green">
                                 <div class="card-header bg-white text-green border-green">
-                                    <strong> Задание 1.8</strong>
+                                    <strong>Задание 1.8</strong>
                                 </div>
                                 <div class="card-body">
                                     <p class="card-text">Среднее арифметическое скидок по акциям</p>
@@ -106,7 +58,7 @@ export class MainPage {
                         <div class="col-md-4">
                             <div class="card h-100 border-green">
                                 <div class="card-header bg-white text-green border-green">
-                                    <strong> Задание 2.10</strong>
+                                    <strong>Задание 2.10</strong>
                                 </div>
                                 <div class="card-body">
                                     <p class="card-text">Проверка промокодов (префиксы)</p>
@@ -139,34 +91,70 @@ export class MainPage {
         return document.getElementById('add-button');
     }
 
+    // Загрузка данных с API
+    getData() {
+        ajax.get(stockUrls.getStocks(), (data, status) => {
+            if (status === 200 && data) {
+                this.products = data;
+                this.filteredProducts = [...this.products];
+                this.renderProducts();
+                // Обновляем задания, которые зависят от данных (можно вызвать пересчёт, но они сами при клике)
+            } else {
+                console.error('Ошибка загрузки данных:', status);
+                const container = this.getProductsContainer();
+                if (container) {
+                    container.innerHTML = '<div class="alert alert-danger">Не удалось загрузить акции</div>';
+                }
+            }
+        });
+    }
+
+    // Отрисовка карточек на основе filteredProducts
+    renderProducts() {
+        const container = this.getProductsContainer();
+        if (!container) return;
+        container.innerHTML = '';
+        if (this.filteredProducts.length === 0) {
+            container.innerHTML = '<div class="alert alert-orange">Ничего не найдено</div>';
+            return;
+        }
+        this.filteredProducts.forEach((item) => {
+            const productCard = new ProductCardComponent(container);
+            productCard.render(
+                item,
+                (id) => this.goToProduct(id),
+                (id) => this.deleteProduct(id)
+            );
+        });
+    }
+
+    // Фильтрация (работает с products, заполняет filteredProducts)
     filterProducts(searchText) {
         if (!searchText) {
             this.filteredProducts = [...this.products];
         } else {
             this.filteredProducts = this.products.filter(product =>
-                product.title.toLowerCase().includes(searchText.toLowerCase())
+                product.title && product.title.toLowerCase().includes(searchText.toLowerCase())
             );
         }
         this.renderProducts();
     }
 
+    // Добавление (локальное копирование первого элемента)
     addProduct() {
         if (this.products.length === 0) return;
-
         const firstProduct = this.products[0];
         const newId = Math.max(...this.products.map(p => p.id)) + 1;
-
         const newProduct = {
             ...firstProduct,
             id: newId,
-            title: `${firstProduct.title} (копия)`,
-            text: firstProduct.text
+            title: `${firstProduct.title} (копия)`
         };
-
         this.products.push(newProduct);
         this.filterProducts(this.getFilterInput()?.value || '');
     }
 
+    // Удаление (локальное)
     deleteProduct(id) {
         this.products = this.products.filter(product => product.id !== id);
         this.filterProducts(this.getFilterInput()?.value || '');
@@ -186,27 +174,7 @@ export class MainPage {
         ordersPage.render();
     }
 
-    renderProducts() {
-        const container = this.getProductsContainer();
-        if (!container) return;
-
-        container.innerHTML = '';
-
-        if (this.filteredProducts.length === 0) {
-            container.innerHTML = '<div class="alert alert-orange">Ничего не найдено</div>';
-            return;
-        }
-
-        this.filteredProducts.forEach((item) => {
-            const productCard = new ProductCardComponent(container);
-            productCard.render(
-                item,
-                (id) => this.goToProduct(id),
-                (id) => this.deleteProduct(id)
-            );
-        });
-    }
-
+    // Задание 1.2 – подсчёт повторяющихся категорий
     countDuplicateCategories() {
         const categories = this.products.map(product => product.category);
         const categoryCount = categories.reduce((acc, category) => {
@@ -225,6 +193,7 @@ export class MainPage {
         };
     }
 
+    // Задание 1.8 – среднее арифметическое скидок
     calculateAverageDiscount() {
         const discounts = this.products.map(product => product.discount);
         if (discounts.length === 0) return { average: 0 };
@@ -232,6 +201,7 @@ export class MainPage {
         return { average: Math.round(sum / discounts.length * 10) / 10 };
     }
 
+    // Задание 2.10 – подсчёт промокодов-префиксов
     countPrefixPromoCodes(enteredCode) {
         if (!enteredCode || enteredCode.trim() === "") {
             return { count: 0, matchingCodes: [] };
@@ -253,6 +223,7 @@ export class MainPage {
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
 
+        // Обработчик фильтра
         const filterInput = this.getFilterInput();
         if (filterInput) {
             filterInput.addEventListener('input', (e) => {
@@ -260,6 +231,7 @@ export class MainPage {
             });
         }
 
+        // Обработчик добавления
         const addButton = this.getAddButton();
         if (addButton) {
             addButton.addEventListener('click', () => {
@@ -267,14 +239,15 @@ export class MainPage {
             });
         }
 
+        // Обработчики заданий
         const task12Btn = document.getElementById('task-1-2-btn');
         const task12Result = document.getElementById('task-1-2-result');
         if (task12Btn && task12Result) {
             task12Btn.addEventListener('click', () => {
                 const res = this.countDuplicateCategories();
                 task12Result.textContent = res.hasDuplicates
-                    ? ` Найдено повторяющихся категорий: ${res.duplicateCount}\n ${res.duplicateDetails.join(", ")}`
-                    : ` Повторяющихся категорий не найдено`;
+                    ? `Найдено повторяющихся категорий: ${res.duplicateCount} (${res.duplicateDetails.join(", ")})`
+                    : `Повторяющихся категорий не найдено`;
                 setTimeout(() => { task12Result.textContent = ""; }, 5000);
             });
         }
@@ -284,7 +257,7 @@ export class MainPage {
         if (task18Btn && task18Result) {
             task18Btn.addEventListener('click', () => {
                 const res = this.calculateAverageDiscount();
-                task18Result.textContent = ` Средняя скидка: ${res.average}%`;
+                task18Result.textContent = `Средняя скидка: ${res.average}%`;
                 setTimeout(() => { task18Result.textContent = ""; }, 5000);
             });
         }
@@ -297,16 +270,17 @@ export class MainPage {
                 const entered = promoInput.value;
                 const res = this.countPrefixPromoCodes(entered);
                 if (!entered) {
-                    promoResult.textContent = " Введите промокод";
+                    promoResult.textContent = "Введите промокод";
                 } else if (res.count > 0) {
-                    promoResult.textContent = ` Найдено ${res.count} промокод(ов): ${res.matchingCodes.join(", ")}`;
+                    promoResult.textContent = `Найдено ${res.count} промокод(ов): ${res.matchingCodes.join(", ")}`;
                 } else {
-                    promoResult.textContent = ` Не найдено промокодов-префиксов для "${entered}"`;
+                    promoResult.textContent = `Не найдено промокодов-префиксов для "${entered}"`;
                 }
                 setTimeout(() => { promoResult.textContent = ""; }, 5000);
             });
         }
 
-        this.renderProducts();
+        // Загружаем данные с сервера
+        this.getData();
     }
 }
