@@ -1,4 +1,3 @@
-// modules/stockUrls.js
 export class StockUrls {
     constructor() {
         this.baseUrl = 'http://localhost:3000';

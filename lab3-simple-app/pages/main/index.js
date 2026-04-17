@@ -1,6 +1,7 @@
 import { HeaderComponent } from "../../components/header/index.js";
 import { ProductCardComponent } from "../../components/product-card/index.js";
 import { ProductPage } from "../product/index.js";
+import { EditPage } from "../edit/index.js";
 import { OrdersPage } from "../orders/index.js";
 import { ajax } from "../../modules/ajax.js";
 import { stockUrls } from "../../modules/stockUrls.js";
@@ -8,8 +9,8 @@ import { stockUrls } from "../../modules/stockUrls.js";
 export class MainPage {
     constructor(parent) {
         this.parent = parent;
-        this.products = [];          // данные с API
-        this.filteredProducts = [];  // отфильтрованные данные
+        this.products = [];
+        this.filteredProducts = [];
     }
 
     get pageRoot() {
@@ -17,8 +18,7 @@ export class MainPage {
     }
 
     getHTML() {
-        return (
-            `
+        return `
             <div id="main-page">
                 <div class="container">
                     <div class="row mb-4">
@@ -75,8 +75,7 @@ export class MainPage {
                     <div id="products-container" class="d-flex flex-wrap gap-3"></div>
                 </div>
             </div>
-            `
-        );
+        `;
     }
 
     getFilterInput() {
@@ -91,14 +90,12 @@ export class MainPage {
         return document.getElementById('add-button');
     }
 
-    // Загрузка данных с API
     getData() {
         ajax.get(stockUrls.getStocks(), (data, status) => {
             if (status === 200 && data) {
                 this.products = data;
                 this.filteredProducts = [...this.products];
                 this.renderProducts();
-                // Обновляем задания, которые зависят от данных (можно вызвать пересчёт, но они сами при клике)
             } else {
                 console.error('Ошибка загрузки данных:', status);
                 const container = this.getProductsContainer();
@@ -109,7 +106,6 @@ export class MainPage {
         });
     }
 
-    // Отрисовка карточек на основе filteredProducts
     renderProducts() {
         const container = this.getProductsContainer();
         if (!container) return;
@@ -123,12 +119,12 @@ export class MainPage {
             productCard.render(
                 item,
                 (id) => this.goToProduct(id),
+                (id) => this.goToEdit(id),
                 (id) => this.deleteProduct(id)
             );
         });
     }
 
-    // Фильтрация (работает с products, заполняет filteredProducts)
     filterProducts(searchText) {
         if (!searchText) {
             this.filteredProducts = [...this.products];
@@ -140,24 +136,24 @@ export class MainPage {
         this.renderProducts();
     }
 
-    // Добавление (локальное копирование первого элемента)
     addProduct() {
-        if (this.products.length === 0) return;
-        const firstProduct = this.products[0];
-        const newId = Math.max(...this.products.map(p => p.id)) + 1;
-        const newProduct = {
-            ...firstProduct,
-            id: newId,
-            title: `${firstProduct.title} (копия)`
-        };
-        this.products.push(newProduct);
-        this.filterProducts(this.getFilterInput()?.value || '');
+        const editPage = new EditPage(this.parent);
+        editPage.render();
     }
 
-    // Удаление (локальное)
+    goToEdit(id) {
+        const editPage = new EditPage(this.parent, id);
+        editPage.render();
+    }
+
     deleteProduct(id) {
-        this.products = this.products.filter(product => product.id !== id);
-        this.filterProducts(this.getFilterInput()?.value || '');
+        ajax.delete(stockUrls.removeStockById(id), (data, status) => {
+            if (status === 204) {
+                this.getData();
+            } else {
+                alert('Ошибка удаления');
+            }
+        });
     }
 
     goToProduct(id) {
@@ -223,23 +219,17 @@ export class MainPage {
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
 
-        // Обработчик фильтра
         const filterInput = this.getFilterInput();
         if (filterInput) {
-            filterInput.addEventListener('input', (e) => {
-                this.filterProducts(e.target.value);
-            });
+            filterInput.addEventListener('input', (e) => this.filterProducts(e.target.value));
         }
 
-        // Обработчик добавления
         const addButton = this.getAddButton();
         if (addButton) {
-            addButton.addEventListener('click', () => {
-                this.addProduct();
-            });
+            addButton.addEventListener('click', () => this.addProduct());
         }
 
-        // Обработчики заданий
+        // Задание 1.2
         const task12Btn = document.getElementById('task-1-2-btn');
         const task12Result = document.getElementById('task-1-2-result');
         if (task12Btn && task12Result) {
@@ -252,6 +242,7 @@ export class MainPage {
             });
         }
 
+        // Задание 1.8
         const task18Btn = document.getElementById('task-1-8-btn');
         const task18Result = document.getElementById('task-1-8-result');
         if (task18Btn && task18Result) {
@@ -262,6 +253,7 @@ export class MainPage {
             });
         }
 
+        // Задание 2.10
         const promoInput = document.getElementById('promo-input');
         const checkButton = document.getElementById('check-promo-btn');
         const promoResult = document.getElementById('promo-result');
@@ -280,7 +272,6 @@ export class MainPage {
             });
         }
 
-        // Загружаем данные с сервера
         this.getData();
     }
 }
