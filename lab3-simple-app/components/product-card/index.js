@@ -4,8 +4,7 @@ export class ProductCardComponent {
     }
 
     getHTML(data) {
-        return (
-            `
+        return `
             <div class="card product-card" style="width: 350px;" data-id="${data.id}">
                 <img class="card-img-top"
                      src="${data.src}"
@@ -22,15 +21,13 @@ export class ProductCardComponent {
                     </div>
                 </div>
             </div>
-            `
-        );
+        `;
     }
 
     addListeners(data, detailListener, editListener, deleteListener) {
         const detailButton = document.querySelector(`.detail-btn[data-id="${data.id}"]`);
         const editButton = document.querySelector(`.edit-btn[data-id="${data.id}"]`);
         const deleteButton = document.querySelector(`.delete-btn[data-id="${data.id}"]`);
-
         if (detailButton) {
             detailButton.addEventListener("click", (e) => {
                 e.stopPropagation();

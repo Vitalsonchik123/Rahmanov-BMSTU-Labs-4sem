@@ -6,7 +6,7 @@ import { stockUrls } from "../../modules/stockUrls.js";
 export class EditPage {
     constructor(parent, id = null) {
         this.parent = parent;
-        this.id = id ? parseInt(id) : null; // если id есть – редактирование
+        this.id = id ? parseInt(id) : null;
         this.stock = null;
     }
 
@@ -47,8 +47,8 @@ export class EditPage {
         `;
     }
 
-    async loadData() {
-        if (!this.id) return;
+    loadData() {
+        if (!this.id) return Promise.resolve();
         return new Promise((resolve, reject) => {
             ajax.get(stockUrls.getStockById(this.id), (data, status) => {
                 if (status === 200 && data) {
@@ -82,7 +82,7 @@ export class EditPage {
         };
     }
 
-    async save(event) {
+    save(event) {
         event.preventDefault();
         const data = this.getFormData();
         const url = this.id ? stockUrls.updateStockById(this.id) : stockUrls.createStock();
@@ -90,7 +90,6 @@ export class EditPage {
 
         ajax[method](url, data, (responseData, status) => {
             if (status === 200 || status === 201) {
-                // Успешно – переходим на главную
                 const mainPage = new MainPage(this.parent);
                 mainPage.render();
             } else {
@@ -111,7 +110,6 @@ export class EditPage {
             const mainPage = new MainPage(this.parent);
             mainPage.render();
         }, () => {});
-
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
 

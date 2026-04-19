@@ -17,8 +17,7 @@ export class ProductPage {
     }
 
     getHTML() {
-        return (
-            `
+        return `
             <div id="product-page" class="container py-3">
                 <div class="mb-3">
                     <button id="back-button" class="btn btn-orange">Назад к акциям</button>
@@ -33,11 +32,9 @@ export class ProductPage {
                     </div>
                 </div>
             </div>
-            `
-        );
+        `;
     }
 
-    // Загрузка данных с API
     getData() {
         ajax.get(stockUrls.getStockById(this.id), (data, status) => {
             if (status === 200 && data) {
@@ -52,15 +49,12 @@ export class ProductPage {
         });
     }
 
-    // Отрисовка полученных данных
     renderData(item) {
         const productContainer = document.getElementById('product-info-container');
         const modelContainer = document.getElementById('three-model-container');
         if (!productContainer || !modelContainer) return;
-
         const product = new ProductComponent(productContainer);
         product.render(item);
-
         const threeModel = new ThreeModelComponent(modelContainer, item.modelPath || './models/computer.glb');
         threeModel.render();
     }
@@ -82,18 +76,14 @@ export class ProductPage {
 
     render() {
         this.parent.innerHTML = '';
-
         const header = new HeaderComponent(this.parent);
         header.render(this.goToHome.bind(this), this.goToOrders.bind(this));
-
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
-
         const backButton = document.getElementById('back-button');
         if (backButton) {
             backButton.addEventListener('click', () => this.goBack());
         }
-
         this.getData();
     }
 }

@@ -9,7 +9,7 @@ import { stockUrls } from "../../modules/stockUrls.js";
 export class MainPage {
     constructor(parent) {
         this.parent = parent;
-        this.products = [];
+        this.products = [];        // данные с API
         this.filteredProducts = [];
     }
 
@@ -29,7 +29,6 @@ export class MainPage {
                             <button id="add-button" class="btn btn-orange">Добавить акцию</button>
                         </div>
                     </div>
-
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <div class="card h-100 border-green">
@@ -71,7 +70,6 @@ export class MainPage {
                             </div>
                         </div>
                     </div>
-
                     <div id="products-container" class="d-flex flex-wrap gap-3"></div>
                 </div>
             </div>
@@ -149,7 +147,7 @@ export class MainPage {
     deleteProduct(id) {
         ajax.delete(stockUrls.removeStockById(id), (data, status) => {
             if (status === 204) {
-                this.getData();
+                this.getData();  // перезагружаем список
             } else {
                 alert('Ошибка удаления');
             }
@@ -170,7 +168,7 @@ export class MainPage {
         ordersPage.render();
     }
 
-    // Задание 1.2 – подсчёт повторяющихся категорий
+    // Задание 1.2
     countDuplicateCategories() {
         const categories = this.products.map(product => product.category);
         const categoryCount = categories.reduce((acc, category) => {
@@ -189,7 +187,7 @@ export class MainPage {
         };
     }
 
-    // Задание 1.8 – среднее арифметическое скидок
+    // Задание 1.8
     calculateAverageDiscount() {
         const discounts = this.products.map(product => product.discount);
         if (discounts.length === 0) return { average: 0 };
@@ -197,7 +195,7 @@ export class MainPage {
         return { average: Math.round(sum / discounts.length * 10) / 10 };
     }
 
-    // Задание 2.10 – подсчёт промокодов-префиксов
+    // Задание 2.10
     countPrefixPromoCodes(enteredCode) {
         if (!enteredCode || enteredCode.trim() === "") {
             return { count: 0, matchingCodes: [] };
@@ -212,10 +210,8 @@ export class MainPage {
 
     render() {
         this.parent.innerHTML = '';
-
         const header = new HeaderComponent(this.parent);
         header.render(this.goToHome.bind(this), this.goToOrders.bind(this));
-
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
 
@@ -223,7 +219,6 @@ export class MainPage {
         if (filterInput) {
             filterInput.addEventListener('input', (e) => this.filterProducts(e.target.value));
         }
-
         const addButton = this.getAddButton();
         if (addButton) {
             addButton.addEventListener('click', () => this.addProduct());
