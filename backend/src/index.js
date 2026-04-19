@@ -152,7 +152,7 @@ app.delete('/stocks/:id', (req, res) => {
 });
 
 // Для всех остальных маршрутов отдаём index.html (SPA роутинг)
-app.get('*', (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
