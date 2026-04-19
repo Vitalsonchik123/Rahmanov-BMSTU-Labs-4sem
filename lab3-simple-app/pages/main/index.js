@@ -9,7 +9,7 @@ import { stockUrls } from "../../modules/stockUrls.js";
 export class MainPage {
     constructor(parent) {
         this.parent = parent;
-        this.products = [];        // данные с API
+        this.products = [];
         this.filteredProducts = [];
     }
 
@@ -88,20 +88,19 @@ export class MainPage {
         return document.getElementById('add-button');
     }
 
-    getData() {
-        ajax.get(stockUrls.getStocks(), (data, status) => {
-            if (status === 200 && data) {
-                this.products = data;
-                this.filteredProducts = [...this.products];
-                this.renderProducts();
-            } else {
-                console.error('Ошибка загрузки данных:', status);
-                const container = this.getProductsContainer();
-                if (container) {
-                    container.innerHTML = '<div class="alert alert-danger">Не удалось загрузить акции</div>';
-                }
+    async getData() {
+        try {
+            const data = await ajax.get(stockUrls.getStocks());
+            this.products = data;
+            this.filteredProducts = [...this.products];
+            this.renderProducts();
+        } catch (error) {
+            console.error('Ошибка загрузки данных:', error);
+            const container = this.getProductsContainer();
+            if (container) {
+                container.innerHTML = '<div class="alert alert-danger">Не удалось загрузить акции</div>';
             }
-        });
+        }
     }
 
     renderProducts() {
@@ -144,14 +143,13 @@ export class MainPage {
         editPage.render();
     }
 
-    deleteProduct(id) {
-        ajax.delete(stockUrls.removeStockById(id), (data, status) => {
-            if (status === 204) {
-                this.getData();  // перезагружаем список
-            } else {
-                alert('Ошибка удаления');
-            }
-        });
+    async deleteProduct(id) {
+        try {
+            await ajax.delete(stockUrls.removeStockById(id));
+            this.getData();
+        } catch (error) {
+            alert('Ошибка удаления');
+        }
     }
 
     goToProduct(id) {
@@ -168,7 +166,6 @@ export class MainPage {
         ordersPage.render();
     }
 
-    // Задание 1.2
     countDuplicateCategories() {
         const categories = this.products.map(product => product.category);
         const categoryCount = categories.reduce((acc, category) => {
@@ -187,7 +184,6 @@ export class MainPage {
         };
     }
 
-    // Задание 1.8
     calculateAverageDiscount() {
         const discounts = this.products.map(product => product.discount);
         if (discounts.length === 0) return { average: 0 };
@@ -195,7 +191,6 @@ export class MainPage {
         return { average: Math.round(sum / discounts.length * 10) / 10 };
     }
 
-    // Задание 2.10
     countPrefixPromoCodes(enteredCode) {
         if (!enteredCode || enteredCode.trim() === "") {
             return { count: 0, matchingCodes: [] };
@@ -224,7 +219,6 @@ export class MainPage {
             addButton.addEventListener('click', () => this.addProduct());
         }
 
-        // Задание 1.2
         const task12Btn = document.getElementById('task-1-2-btn');
         const task12Result = document.getElementById('task-1-2-result');
         if (task12Btn && task12Result) {
@@ -237,7 +231,6 @@ export class MainPage {
             });
         }
 
-        // Задание 1.8
         const task18Btn = document.getElementById('task-1-8-btn');
         const task18Result = document.getElementById('task-1-8-result');
         if (task18Btn && task18Result) {
@@ -248,7 +241,6 @@ export class MainPage {
             });
         }
 
-        // Задание 2.10
         const promoInput = document.getElementById('promo-input');
         const checkButton = document.getElementById('check-promo-btn');
         const promoResult = document.getElementById('promo-result');

@@ -47,18 +47,13 @@ export class EditPage {
         `;
     }
 
-    loadData() {
-        if (!this.id) return Promise.resolve();
-        return new Promise((resolve, reject) => {
-            ajax.get(stockUrls.getStockById(this.id), (data, status) => {
-                if (status === 200 && data) {
-                    this.stock = data;
-                    resolve(data);
-                } else {
-                    reject(new Error('Не удалось загрузить данные'));
-                }
-            });
-        });
+    async loadData() {
+        if (!this.id) return;
+        try {
+            this.stock = await ajax.get(stockUrls.getStockById(this.id));
+        } catch (error) {
+            throw new Error('Не удалось загрузить данные');
+        }
     }
 
     populateForm() {
@@ -82,20 +77,22 @@ export class EditPage {
         };
     }
 
-    save(event) {
+    async save(event) {
         event.preventDefault();
         const data = this.getFormData();
         const url = this.id ? stockUrls.updateStockById(this.id) : stockUrls.createStock();
         const method = this.id ? 'patch' : 'post';
-
-        ajax[method](url, data, (responseData, status) => {
-            if (status === 200 || status === 201) {
-                const mainPage = new MainPage(this.parent);
-                mainPage.render();
+        try {
+            if (method === 'patch') {
+                await ajax.patch(url, data);
             } else {
-                alert('Ошибка сохранения');
+                await ajax.post(url, data);
             }
-        });
+            const mainPage = new MainPage(this.parent);
+            mainPage.render();
+        } catch (error) {
+            alert('Ошибка сохранения');
+        }
     }
 
     cancel() {

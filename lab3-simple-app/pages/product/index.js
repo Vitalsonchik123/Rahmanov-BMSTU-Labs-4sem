@@ -35,18 +35,17 @@ export class ProductPage {
         `;
     }
 
-    getData() {
-        ajax.get(stockUrls.getStockById(this.id), (data, status) => {
-            if (status === 200 && data) {
-                this.renderData(data);
-            } else {
-                console.error('Ошибка загрузки карточки:', status);
-                const container = document.getElementById('product-info-container');
-                if (container) {
-                    container.innerHTML = '<div class="alert alert-danger">Не удалось загрузить данные акции</div>';
-                }
+    async getData() {
+        try {
+            const data = await ajax.get(stockUrls.getStockById(this.id));
+            this.renderData(data);
+        } catch (error) {
+            console.error('Ошибка загрузки карточки:', error);
+            const container = document.getElementById('product-info-container');
+            if (container) {
+                container.innerHTML = '<div class="alert alert-danger">Не удалось загрузить данные акции</div>';
             }
-        });
+        }
     }
 
     renderData(item) {
