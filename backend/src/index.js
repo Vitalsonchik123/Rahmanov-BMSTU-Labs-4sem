@@ -79,7 +79,7 @@ function saveData() {
     fs.writeFileSync(dataPath, JSON.stringify(stocks, null, 2));
 }
 
-// CORS для разработки
+// CORS для разработки (можно оставить для совместимости, но при статике не нужен)
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
@@ -88,6 +88,9 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+// Раздача статики (собранный фронтенд из папки public)
+app.use(express.static(path.join(__dirname, '../public')));
 
 // GET /stocks – список всех карточек
 app.get('/stocks', (req, res) => {
@@ -130,7 +133,6 @@ app.patch('/stocks/:id', (req, res) => {
     const index = stocks.findIndex(s => s.id === id);
     if (index === -1) return res.status(404).json({ error: "Not found" });
     const updated = { ...stocks[index], ...req.body };
-    // Если promoCodes пришёл строкой через запятую, преобразуем
     if (req.body.promoCodes && typeof req.body.promoCodes === 'string') {
         updated.promoCodes = req.body.promoCodes.split(',').map(s => s.trim());
     }
@@ -147,6 +149,11 @@ app.delete('/stocks/:id', (req, res) => {
     stocks.splice(index, 1);
     saveData();
     res.status(204).send();
+});
+
+// Для всех остальных маршрутов отдаём index.html (SPA роутинг)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
 app.listen(port, () => {
