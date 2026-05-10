@@ -28,19 +28,6 @@
     "modelPath": "./models/computer.glb"
   },
   {
-    "id": 3,
-    "src": "https://img.ixbt.site/live/topics/preview/00/01/10/24/cefc407d3e.jpg",
-    "title": "Распродажа комплектующих",
-    "text": "Скидка 30% на весь ассортимент!",
-    "category": "комплектующие",
-    "discount": 30,
-    "promoCodes": [
-      "sale30",
-      "saleAll"
-    ],
-    "modelPath": "./models/computer.glb"
-  },
-  {
     "id": 4,
     "src": "https://img.freepik.com/free-psd/birthday-colorful-present-box-design_23-2150318126.jpg",
     "title": "Подарок при покупке",
