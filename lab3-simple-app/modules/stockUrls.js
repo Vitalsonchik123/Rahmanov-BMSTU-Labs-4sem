@@ -3,8 +3,12 @@ export class StockUrls {
         this.baseUrl = 'http://localhost:3000';
     }
 
-    getStocks() {
-        return `${this.baseUrl}/stocks`;
+    getStocks(search = '') {
+        let url = `${this.baseUrl}/stocks`;
+        if (search) {
+            url += `?search=${encodeURIComponent(search)}`;
+        }
+        return url;
     }
 
     getStockById(id) {

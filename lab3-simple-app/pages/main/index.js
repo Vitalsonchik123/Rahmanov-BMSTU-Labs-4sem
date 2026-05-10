@@ -18,63 +18,66 @@ export class MainPage {
     }
 
     getHTML() {
-        return `
-            <div id="main-page">
-                <div class="container">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <input type="text" id="filter-input" class="form-control filter-input" placeholder="Фильтр по названию...">
-                        </div>
-                        <div class="col-md-6 text-end">
-                            <button id="add-button" class="btn btn-orange">Добавить акцию</button>
-                        </div>
+    return `
+        <div id="main-page">
+            <div class="container">
+                <div class="row mb-4">
+                    <div class="col-md-5">
+                        <input type="text" id="filter-input" class="form-control filter-input" placeholder="Фильтр по названию...">
                     </div>
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <div class="card h-100 border-green">
-                                <div class="card-header bg-white text-green border-green">
-                                    <strong>Задание 1.2</strong>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">Подсчет повторяющихся категорий товаров</p>
-                                    <button id="task-1-2-btn" class="btn btn-outline-success btn-sm">Вычислить</button>
-                                    <div id="task-1-2-result" class="mt-2 small text-muted"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 border-green">
-                                <div class="card-header bg-white text-green border-green">
-                                    <strong>Задание 1.8</strong>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">Среднее арифметическое скидок по акциям</p>
-                                    <button id="task-1-8-btn" class="btn btn-outline-success btn-sm">Вычислить</button>
-                                    <div id="task-1-8-result" class="mt-2 small text-muted"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 border-green">
-                                <div class="card-header bg-white text-green border-green">
-                                    <strong>Задание 2.10</strong>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">Проверка промокодов (префиксы)</p>
-                                    <div class="input-group input-group-sm mb-2">
-                                        <input type="text" id="promo-input" class="form-control" placeholder="Введите промокод">
-                                        <button id="check-promo-btn" class="btn btn-outline-success btn-sm">Проверить</button>
-                                    </div>
-                                    <div id="promo-result" class="small text-muted"></div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-md-2">
+                        <button id="search-button" class="btn btn-primary w-100">🔍 Поиск</button>
                     </div>
-                    <div id="products-container" class="d-flex flex-wrap gap-3"></div>
+                    <div class="col-md-5 text-end">
+                        <button id="add-button" class="btn btn-orange w-100">➕ Добавить акцию</button>
+                    </div>
                 </div>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 border-green">
+                            <div class="card-header bg-white text-green border-green">
+                                <strong>Задание 1.2</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Подсчет повторяющихся категорий товаров</p>
+                                <button id="task-1-2-btn" class="btn btn-outline-success btn-sm">Вычислить</button>
+                                <div id="task-1-2-result" class="mt-2 small text-muted"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-green">
+                            <div class="card-header bg-white text-green border-green">
+                                <strong>Задание 1.8</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Среднее арифметическое скидок по акциям</p>
+                                <button id="task-1-8-btn" class="btn btn-outline-success btn-sm">Вычислить</button>
+                                <div id="task-1-8-result" class="mt-2 small text-muted"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-green">
+                            <div class="card-header bg-white text-green border-green">
+                                <strong>Задание 2.10</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Проверка промокодов (префиксы)</p>
+                                <div class="input-group input-group-sm mb-2">
+                                    <input type="text" id="promo-input" class="form-control" placeholder="Введите промокод">
+                                    <button id="check-promo-btn" class="btn btn-outline-success btn-sm">Проверить</button>
+                                </div>
+                                <div id="promo-result" class="small text-muted"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="products-container" class="d-flex flex-wrap gap-3"></div>
             </div>
-        `;
-    }
+        </div>
+    `;
+}
 
     getFilterInput() {
         return document.getElementById('filter-input');
