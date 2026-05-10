@@ -10,6 +10,7 @@ export class ProductPage {
     constructor(parent, id) {
         this.parent = parent;
         this.id = parseInt(id);
+        this.pollingInterval = null;   // для хранения таймера Short Polling
     }
 
     get pageRoot() {
@@ -31,19 +32,32 @@ export class ProductPage {
                         <div id="three-model-container"></div>
                     </div>
                 </div>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h4>Комментарии</h4>
+                        <div id="comments-list" class="mb-3"></div>
+                        <div class="card p-3">
+                            <h5>Добавить комментарий</h5>
+                            <input type="text" id="comment-author" class="form-control mb-2" placeholder="Ваше имя">
+                            <textarea id="comment-text" class="form-control mb-2" rows="2" placeholder="Ваш комментарий"></textarea>
+                            <button id="submit-comment" class="btn btn-success">Отправить</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
     }
 
-    async getData() {
+    async loadData() {
         try {
             const data = await ajax.get(stockUrls.getStockById(this.id));
             this.renderData(data);
+            this.renderComments(data.comments || []);
         } catch (error) {
             console.error('Ошибка загрузки карточки:', error);
             const container = document.getElementById('product-info-container');
             if (container) {
-                container.innerHTML = '<div class="alert alert-danger">Не удалось загрузить данные акции</div>';
+                container.innerHTML = '<div class="alert alert-danger">Не удалось загрузить данные</div>';
             }
         }
     }
@@ -58,17 +72,78 @@ export class ProductPage {
         threeModel.render();
     }
 
+    renderComments(comments) {
+        const commentsContainer = document.getElementById('comments-list');
+        if (!commentsContainer) return;
+        if (!comments || comments.length === 0) {
+            commentsContainer.innerHTML = '<p class="text-muted">Нет комментариев. Будьте первым!</p>';
+            return;
+        }
+        commentsContainer.innerHTML = comments.map(comment => `
+            <div class="card mb-2">
+                <div class="card-body">
+                    <strong>${escapeHtml(comment.author)}</strong>
+                    <small class="text-muted">${new Date(comment.createdAt).toLocaleString()}</small>
+                    <p class="mb-0 mt-1">${escapeHtml(comment.text)}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async addComment() {
+        const authorInput = document.getElementById('comment-author');
+        const textInput = document.getElementById('comment-text');
+        const author = authorInput.value.trim();
+        const text = textInput.value.trim();
+        if (!author || !text) {
+            alert('Заполните имя и текст комментария');
+            return;
+        }
+        try {
+            await ajax.post(stockUrls.addComment(this.id), { author, text });
+            authorInput.value = '';
+            textInput.value = '';
+            // После добавления комментария сразу обновляем список
+            await this.loadData();
+        } catch (error) {
+            console.error('Ошибка добавления комментария:', error);
+            alert('Не удалось добавить комментарий');
+        }
+    }
+
+    startPolling() {
+        if (this.pollingInterval) clearInterval(this.pollingInterval);
+        this.pollingInterval = setInterval(async () => {
+            try {
+                const data = await ajax.get(stockUrls.getStockById(this.id));
+                this.renderComments(data.comments || []);
+            } catch (error) {
+                console.error('Polling error:', error);
+            }
+        }, 2500);
+    }
+
+    stopPolling() {
+        if (this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+            this.pollingInterval = null;
+        }
+    }
+
     goToHome() {
+        this.stopPolling();
         const mainPage = new MainPage(this.parent);
         mainPage.render();
     }
 
     goBack() {
+        this.stopPolling();
         const mainPage = new MainPage(this.parent);
         mainPage.render();
     }
 
     goToOrders() {
+        this.stopPolling();
         const ordersPage = new OrdersPage(this.parent);
         ordersPage.render();
     }
@@ -79,10 +154,31 @@ export class ProductPage {
         header.render(this.goToHome.bind(this), this.goToOrders.bind(this));
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
+
         const backButton = document.getElementById('back-button');
         if (backButton) {
             backButton.addEventListener('click', () => this.goBack());
         }
-        this.getData();
+
+        const submitButton = document.getElementById('submit-comment');
+        if (submitButton) {
+            submitButton.addEventListener('click', () => this.addComment());
+        }
+
+        // Загружаем данные и запускаем Short Polling
+        this.loadData().then(() => {
+            this.startPolling();
+        });
     }
+}
+
+// Вспомогательная функция для защиты от XSS
+function escapeHtml(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }

@@ -26,6 +26,10 @@ export class StockUrls {
     updateStockById(id) {
         return `${this.baseUrl}/stocks/${id}`;
     }
+
+    addComment(id) {
+    return `${this.baseUrl}/stocks/${id}/comments`;
+}
 }
 
 export const stockUrls = new StockUrls();
