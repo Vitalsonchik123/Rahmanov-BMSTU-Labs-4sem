@@ -39,7 +39,21 @@
       "sale10",
       "drive"
     ],
-    "modelPath": "./models/computer.glb"
+    "modelPath": "./models/computer.glb",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Аноним",
+        "text": "Очень хорошая флешка",
+        "createdAt": "2026-05-10T13:54:39.075Z"
+      },
+      {
+        "id": 2,
+        "author": "аыа",
+        "text": "аыаыа",
+        "createdAt": "2026-05-10T13:54:50.583Z"
+      }
+    ]
   },
   {
     "id": 3,
