@@ -9,8 +9,8 @@ import { stockUrls } from "../../modules/stockUrls.js";
 export class MainPage {
     constructor(parent) {
         this.parent = parent;
-        this.products = [];        // данные с API
-        this.filteredProducts = [];
+        this.products = [];        // все данные с API
+        this.filteredProducts = []; // отображаемые данные (после запроса на сервер)
     }
 
     get pageRoot() {
@@ -18,66 +18,66 @@ export class MainPage {
     }
 
     getHTML() {
-    return `
-        <div id="main-page">
-            <div class="container">
-                <div class="row mb-4">
-                    <div class="col-md-5">
-                        <input type="text" id="filter-input" class="form-control filter-input" placeholder="Фильтр по названию...">
-                    </div>
-                    <div class="col-md-2">
-                        <button id="search-button" class="btn btn-primary w-100">🔍 Поиск</button>
-                    </div>
-                    <div class="col-md-5 text-end">
-                        <button id="add-button" class="btn btn-orange w-100">➕ Добавить акцию</button>
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <div class="card h-100 border-green">
-                            <div class="card-header bg-white text-green border-green">
-                                <strong>Задание 1.2</strong>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">Подсчет повторяющихся категорий товаров</p>
-                                <button id="task-1-2-btn" class="btn btn-outline-success btn-sm">Вычислить</button>
-                                <div id="task-1-2-result" class="mt-2 small text-muted"></div>
-                            </div>
+        return `
+            <div id="main-page">
+                <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-md-5">
+                            <input type="text" id="filter-input" class="form-control filter-input" placeholder="Фильтр по названию...">
+                        </div>
+                        <div class="col-md-2">
+                            <button id="search-button" class="btn btn-primary w-100">🔍 Поиск</button>
+                        </div>
+                        <div class="col-md-5 text-end">
+                            <button id="add-button" class="btn btn-orange w-100">➕ Добавить акцию</button>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card h-100 border-green">
-                            <div class="card-header bg-white text-green border-green">
-                                <strong>Задание 1.8</strong>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">Среднее арифметическое скидок по акциям</p>
-                                <button id="task-1-8-btn" class="btn btn-outline-success btn-sm">Вычислить</button>
-                                <div id="task-1-8-result" class="mt-2 small text-muted"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card h-100 border-green">
-                            <div class="card-header bg-white text-green border-green">
-                                <strong>Задание 2.10</strong>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">Проверка промокодов (префиксы)</p>
-                                <div class="input-group input-group-sm mb-2">
-                                    <input type="text" id="promo-input" class="form-control" placeholder="Введите промокод">
-                                    <button id="check-promo-btn" class="btn btn-outline-success btn-sm">Проверить</button>
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 border-green">
+                                <div class="card-header bg-white text-green border-green">
+                                    <strong>Задание 1.2</strong>
                                 </div>
-                                <div id="promo-result" class="small text-muted"></div>
+                                <div class="card-body">
+                                    <p class="card-text">Подсчет повторяющихся категорий товаров</p>
+                                    <button id="task-1-2-btn" class="btn btn-outline-success btn-sm">Вычислить</button>
+                                    <div id="task-1-2-result" class="mt-2 small text-muted"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-green">
+                                <div class="card-header bg-white text-green border-green">
+                                    <strong>Задание 1.8</strong>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Среднее арифметическое скидок по акциям</p>
+                                    <button id="task-1-8-btn" class="btn btn-outline-success btn-sm">Вычислить</button>
+                                    <div id="task-1-8-result" class="mt-2 small text-muted"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-green">
+                                <div class="card-header bg-white text-green border-green">
+                                    <strong>Задание 2.10</strong>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Проверка промокодов (префиксы)</p>
+                                    <div class="input-group input-group-sm mb-2">
+                                        <input type="text" id="promo-input" class="form-control" placeholder="Введите промокод">
+                                        <button id="check-promo-btn" class="btn btn-outline-success btn-sm">Проверить</button>
+                                    </div>
+                                    <div id="promo-result" class="small text-muted"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div id="products-container" class="d-flex flex-wrap gap-3"></div>
                 </div>
-                <div id="products-container" class="d-flex flex-wrap gap-3"></div>
             </div>
-        </div>
-    `;
-}
+        `;
+    }
 
     getFilterInput() {
         return document.getElementById('filter-input');
@@ -91,8 +91,10 @@ export class MainPage {
         return document.getElementById('add-button');
     }
 
-    getData() {
-        ajax.get(stockUrls.getStocks(), (data, status) => {
+    // Загрузка карточек с сервера (с поддержкой поиска)
+    loadStocks(search = '') {
+        const url = stockUrls.getStocks(search);
+        ajax.get(url, (data, status) => {
             if (status === 200 && data) {
                 this.products = data;
                 this.filteredProducts = [...this.products];
@@ -105,6 +107,13 @@ export class MainPage {
                 }
             }
         });
+    }
+
+    // Выполнить поиск по нажатию кнопки
+    performSearch() {
+        const searchInput = this.getFilterInput();
+        const searchText = searchInput ? searchInput.value.trim() : '';
+        this.loadStocks(searchText);
     }
 
     renderProducts() {
@@ -126,17 +135,6 @@ export class MainPage {
         });
     }
 
-    filterProducts(searchText) {
-        if (!searchText) {
-            this.filteredProducts = [...this.products];
-        } else {
-            this.filteredProducts = this.products.filter(product =>
-                product.title && product.title.toLowerCase().includes(searchText.toLowerCase())
-            );
-        }
-        this.renderProducts();
-    }
-
     addProduct() {
         const editPage = new EditPage(this.parent);
         editPage.render();
@@ -150,7 +148,7 @@ export class MainPage {
     deleteProduct(id) {
         ajax.delete(stockUrls.removeStockById(id), (data, status) => {
             if (status === 204) {
-                this.getData();  // перезагружаем список
+                this.loadStocks();  // перезагружаем список (без поиска)
             } else {
                 alert('Ошибка удаления');
             }
@@ -218,13 +216,16 @@ export class MainPage {
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
 
-        const filterInput = this.getFilterInput();
-        if (filterInput) {
-            filterInput.addEventListener('input', (e) => this.filterProducts(e.target.value));
-        }
+        // Кнопка "Добавить акцию"
         const addButton = this.getAddButton();
         if (addButton) {
             addButton.addEventListener('click', () => this.addProduct());
+        }
+
+        // Кнопка "Поиск"
+        const searchButton = document.getElementById('search-button');
+        if (searchButton) {
+            searchButton.addEventListener('click', () => this.performSearch());
         }
 
         // Задание 1.2
@@ -270,6 +271,6 @@ export class MainPage {
             });
         }
 
-        this.getData();
+        this.loadStocks(); // Начальная загрузка всех карточек (без поиска)
     }
 }
