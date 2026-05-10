@@ -19,57 +19,65 @@ try {
     const rawData = fs.readFileSync(dataPath);
     stocks = JSON.parse(rawData);
 } catch (err) {
-    // Если файла нет, создаём начальные данные
+    // Если файла нет, создаём начальные данные (с комментариями)
     stocks = [
         {
             id: 1,
             src: "https://3dnews.ru/assets/external/illustrations/2014/12/29/907415/ASUS-PQ321QE.jpg",
-            title: "Скидка на мониторы",
+            title: "Монитор Maifan MF238-1, чёрный",
             text: "Скидка до 50% на все мониторы!",
             category: "комплектующие",
             discount: 50,
             promoCodes: ["sale", "sale50", "screen"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: [
+                { id: 1, author: "Алексей", text: "Отличная акция! Уже присмотрел монитор.", createdAt: new Date().toISOString() },
+                { id: 2, author: "Мария", text: "А распространяется на игровые мониторы?", createdAt: new Date().toISOString() }
+            ]
         },
         {
             id: 2,
             src: "https://s.a-5.ru/i/file/161/7/4f/73/4f73f292cd213e35.jpg",
-            title: "Акция на флешки",
+            title: "Флешка JUST Зелёная 16Гб",
             text: "Купи 2 флешки - получи 3-ю в подарок!",
             category: "аксессуары",
             discount: 10,
             promoCodes: ["flash", "sale10", "drive"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: []
         },
         {
             id: 3,
-            src: "https://img.ixbt.site/live/topics/preview/00/01/10/24/cefc407d3e.jpg",
-            title: "Распродажа комплектующих",
+            src: "https://fragstore.ru/images/detailed/59/razer-viper-2-1000x1000.jpg",
+            title: "Компьютерная мышь Razer Viper, чёрная",
             text: "Скидка 30% на весь ассортимент!",
             category: "комплектующие",
             discount: 30,
             promoCodes: ["sale30", "saleAll"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: []
         },
         {
             id: 4,
-            src: "https://img.freepik.com/free-psd/birthday-colorful-present-box-design_23-2150318126.jpg",
-            title: "Подарок при покупке",
-            text: "При заказе от 5000 руб.",
-            category: "акции",
+            src: "https://hiper-power.com/upload/iblock/fde/WeChat%20Image_20200505084437.jpg",
+            title: "Вентилятор для корпуса HIPER HCF1251-03-RGB",
+            text: "",
+            category: "комплектующие",
             discount: 0,
             promoCodes: ["present"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: []
         },
         {
             id: 5,
-            src: "https://eliteextra.com/wp-content/uploads/2022/05/AdobeStock_384368336-scaled.jpeg",
-            title: "Бесплатная доставка",
-            text: "Бесплатная доставка при заказе от 3000 руб!",
+            src: "https://hiper-power.com/upload/iblock/4c4/HG302%20(1)_1000x1000.jpg",
+            title: "Игровой корпус HIPER HG302 SHADOW",
+            text: "На 30% дешевле, при заказе готовой сборки!",
             category: "акции",
-            discount: 100,
+            discount: 30,
             promoCodes: ["free", "delivery"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: []
         }
     ];
     saveData();
@@ -79,15 +87,18 @@ function saveData() {
     fs.writeFileSync(dataPath, JSON.stringify(stocks, null, 2));
 }
 
-// CORS для разработки
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
+// CORS закомментирован (для ЛР5 требуется расширение, для ЛР6 не нужен)
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type');
+//     next();
+// });
 
 app.use(express.json());
+
+// Раздача статики (собранный фронтенд из папки public)
+app.use(express.static(path.join(__dirname, '../public')));
 
 // GET /stocks – список всех карточек (с поддержкой фильтрации по названию)
 app.get('/stocks', (req, res) => {
@@ -102,7 +113,7 @@ app.get('/stocks', (req, res) => {
     res.json(result);
 });
 
-// GET /stocks/:id – одна карточка
+// GET /stocks/:id – одна карточка (включая комментарии)
 app.get('/stocks/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const stock = stocks.find(s => s.id === id);
@@ -125,7 +136,8 @@ app.post('/stocks', (req, res) => {
         category: category || "общее",
         discount: discount !== undefined ? discount : 0,
         promoCodes: promoCodes ? (Array.isArray(promoCodes) ? promoCodes : promoCodes.split(',').map(s => s.trim())) : [],
-        modelPath: modelPath || "./models/computer.glb"
+        modelPath: modelPath || "./models/computer.glb",
+        comments: []   // новый массив комментариев
     };
     stocks.push(newStock);
     saveData();
@@ -138,7 +150,6 @@ app.patch('/stocks/:id', (req, res) => {
     const index = stocks.findIndex(s => s.id === id);
     if (index === -1) return res.status(404).json({ error: "Not found" });
     const updated = { ...stocks[index], ...req.body };
-    // Если promoCodes пришёл строкой через запятую, преобразуем
     if (req.body.promoCodes && typeof req.body.promoCodes === 'string') {
         updated.promoCodes = req.body.promoCodes.split(',').map(s => s.trim());
     }
@@ -155,6 +166,35 @@ app.delete('/stocks/:id', (req, res) => {
     stocks.splice(index, 1);
     saveData();
     res.status(204).send();
+});
+
+// POST /stocks/:id/comments – добавить комментарий к карточке
+app.post('/stocks/:id/comments', (req, res) => {
+    const id = parseInt(req.params.id);
+    const stock = stocks.find(s => s.id === id);
+    if (!stock) return res.status(404).json({ error: "Stock not found" });
+
+    const { author, text } = req.body;
+    if (!author || !text) {
+        return res.status(400).json({ error: "Author and text are required" });
+    }
+
+    const comments = stock.comments || [];
+    const newId = comments.length ? Math.max(...comments.map(c => c.id)) + 1 : 1;
+    const newComment = {
+        id: newId,
+        author,
+        text,
+        createdAt: new Date().toISOString()
+    };
+    stock.comments = [...comments, newComment];
+    saveData();
+    res.status(201).json(newComment);
+});
+
+// Для всех остальных маршрутов отдаём index.html (SPA роутинг)
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
 app.listen(port, () => {
