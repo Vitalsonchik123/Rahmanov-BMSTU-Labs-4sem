@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "start": "live-server --port=5500",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
     "three": "^0.183.2"
   },
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "vite": "^8.0.11"
   },
   "author": "",
   "license": "ISC"
+
 }
