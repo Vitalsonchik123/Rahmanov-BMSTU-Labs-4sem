@@ -19,7 +19,7 @@ try {
     const rawData = fs.readFileSync(dataPath);
     stocks = JSON.parse(rawData);
 } catch (err) {
-    // Если файла нет, создаём начальные данные
+    // Если файла нет, создаём начальные данные (с комментариями)
     stocks = [
         {
             id: 1,
@@ -29,7 +29,11 @@ try {
             category: "комплектующие",
             discount: 50,
             promoCodes: ["sale", "sale50", "screen"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: [
+                { id: 1, author: "Алексей", text: "Отличная акция! Уже присмотрел монитор.", createdAt: new Date().toISOString() },
+                { id: 2, author: "Мария", text: "А распространяется на игровые мониторы?", createdAt: new Date().toISOString() }
+            ]
         },
         {
             id: 2,
@@ -39,7 +43,8 @@ try {
             category: "аксессуары",
             discount: 10,
             promoCodes: ["flash", "sale10", "drive"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: []
         },
         {
             id: 3,
@@ -49,7 +54,8 @@ try {
             category: "комплектующие",
             discount: 30,
             promoCodes: ["sale30", "saleAll"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: []
         },
         {
             id: 4,
@@ -59,7 +65,8 @@ try {
             category: "комплектующие",
             discount: 0,
             promoCodes: ["present"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: []
         },
         {
             id: 5,
@@ -69,7 +76,8 @@ try {
             category: "акции",
             discount: 30,
             promoCodes: ["free", "delivery"],
-            modelPath: "./models/computer.glb"
+            modelPath: "./models/computer.glb",
+            comments: []
         }
     ];
     saveData();
@@ -79,20 +87,18 @@ function saveData() {
     fs.writeFileSync(dataPath, JSON.stringify(stocks, null, 2));
 }
 
-//app.use((req, res, next) => {
-//    res.header('Access-Control-Allow-Origin', '*');
-//    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
-//    res.header('Access-Control-Allow-Headers', 'Content-Type');
-//    next();
-//});
+// CORS закомментирован (для ЛР5 требуется расширение, для ЛР6 не нужен)
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type');
+//     next();
+// });
 
 app.use(express.json());
 
 // Раздача статики (собранный фронтенд из папки public)
 app.use(express.static(path.join(__dirname, '../public')));
-
-
-
 
 // GET /stocks – список всех карточек (с поддержкой фильтрации по названию)
 app.get('/stocks', (req, res) => {
@@ -107,7 +113,7 @@ app.get('/stocks', (req, res) => {
     res.json(result);
 });
 
-// GET /stocks/:id – одна карточка
+// GET /stocks/:id – одна карточка (включая комментарии)
 app.get('/stocks/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const stock = stocks.find(s => s.id === id);
@@ -130,7 +136,8 @@ app.post('/stocks', (req, res) => {
         category: category || "общее",
         discount: discount !== undefined ? discount : 0,
         promoCodes: promoCodes ? (Array.isArray(promoCodes) ? promoCodes : promoCodes.split(',').map(s => s.trim())) : [],
-        modelPath: modelPath || "./models/computer.glb"
+        modelPath: modelPath || "./models/computer.glb",
+        comments: []   // новый массив комментариев
     };
     stocks.push(newStock);
     saveData();
@@ -159,6 +166,30 @@ app.delete('/stocks/:id', (req, res) => {
     stocks.splice(index, 1);
     saveData();
     res.status(204).send();
+});
+
+// POST /stocks/:id/comments – добавить комментарий к карточке
+app.post('/stocks/:id/comments', (req, res) => {
+    const id = parseInt(req.params.id);
+    const stock = stocks.find(s => s.id === id);
+    if (!stock) return res.status(404).json({ error: "Stock not found" });
+
+    const { author, text } = req.body;
+    if (!author || !text) {
+        return res.status(400).json({ error: "Author and text are required" });
+    }
+
+    const comments = stock.comments || [];
+    const newId = comments.length ? Math.max(...comments.map(c => c.id)) + 1 : 1;
+    const newComment = {
+        id: newId,
+        author,
+        text,
+        createdAt: new Date().toISOString()
+    };
+    stock.comments = [...comments, newComment];
+    saveData();
+    res.status(201).json(newComment);
 });
 
 // Для всех остальных маршрутов отдаём index.html (SPA роутинг)
