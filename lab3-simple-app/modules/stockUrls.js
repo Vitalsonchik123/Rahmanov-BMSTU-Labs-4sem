@@ -4,12 +4,12 @@ export class StockUrls {
     }
 
     getStocks(search = '') {
-    let url = `${this.baseUrl}/stocks`;
-    if (search) {
-        url += `?search=${encodeURIComponent(search)}`;
+        let url = `${this.baseUrl}/stocks`;
+        if (search) {
+            url += `?search=${encodeURIComponent(search)}`;
+        }
+        return url;
     }
-    return url;
-}
 
     getStockById(id) {
         return `${this.baseUrl}/stocks/${id}`;

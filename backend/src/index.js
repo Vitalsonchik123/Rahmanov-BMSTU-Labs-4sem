@@ -89,9 +89,17 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-// GET /stocks – список всех карточек
+// GET /stocks – список всех карточек (с поддержкой фильтрации по названию)
 app.get('/stocks', (req, res) => {
-    res.json(stocks);
+    const search = req.query.search;
+    let result = stocks;
+    if (search && search.trim() !== '') {
+        const searchLower = search.toLowerCase();
+        result = stocks.filter(stock =>
+            stock.title && stock.title.toLowerCase().includes(searchLower)
+        );
+    }
+    res.json(result);
 });
 
 // GET /stocks/:id – одна карточка
