@@ -11,7 +11,21 @@
       "sale50",
       "screen"
     ],
-    "modelPath": "./models/computer.glb"
+    "modelPath": "./models/computer.glb",
+    "comments": [
+      {
+        "id": 1,
+        "author": "Виталий",
+        "text": "123",
+        "createdAt": "2026-05-10T13:36:29.584Z"
+      },
+      {
+        "id": 2,
+        "author": "Алексей",
+        "text": "Комментарий",
+        "createdAt": "2026-05-10T13:36:53.898Z"
+      }
+    ]
   },
   {
     "id": 2,
