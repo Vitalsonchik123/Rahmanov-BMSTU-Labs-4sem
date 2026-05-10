@@ -24,7 +24,7 @@ try {
         {
             id: 1,
             src: "https://3dnews.ru/assets/external/illustrations/2014/12/29/907415/ASUS-PQ321QE.jpg",
-            title: "Скидка на мониторы",
+            title: "Монитор Maifan MF238-1, чёрный",
             text: "Скидка до 50% на все мониторы!",
             category: "комплектующие",
             discount: 50,
@@ -34,7 +34,7 @@ try {
         {
             id: 2,
             src: "https://s.a-5.ru/i/file/161/7/4f/73/4f73f292cd213e35.jpg",
-            title: "Акция на флешки",
+            title: "Флешка JUST Зелёная 16Гб",
             text: "Купи 2 флешки - получи 3-ю в подарок!",
             category: "аксессуары",
             discount: 10,
@@ -43,8 +43,8 @@ try {
         },
         {
             id: 3,
-            src: "https://img.ixbt.site/live/topics/preview/00/01/10/24/cefc407d3e.jpg",
-            title: "Распродажа комплектующих",
+            src: "https://fragstore.ru/images/detailed/59/razer-viper-2-1000x1000.jpg",
+            title: "Компьютерная мышь Razer Viper, чёрная",
             text: "Скидка 30% на весь ассортимент!",
             category: "комплектующие",
             discount: 30,
@@ -53,21 +53,21 @@ try {
         },
         {
             id: 4,
-            src: "https://img.freepik.com/free-psd/birthday-colorful-present-box-design_23-2150318126.jpg",
-            title: "Подарок при покупке",
-            text: "При заказе от 5000 руб.",
-            category: "акции",
+            src: "https://hiper-power.com/upload/iblock/fde/WeChat%20Image_20200505084437.jpg",
+            title: "Вентилятор для корпуса HIPER HCF1251-03-RGB",
+            text: "",
+            category: "комплектующие",
             discount: 0,
             promoCodes: ["present"],
             modelPath: "./models/computer.glb"
         },
         {
             id: 5,
-            src: "https://eliteextra.com/wp-content/uploads/2022/05/AdobeStock_384368336-scaled.jpeg",
-            title: "Бесплатная доставка",
-            text: "Бесплатная доставка при заказе от 3000 руб!",
+            src: "https://hiper-power.com/upload/iblock/4c4/HG302%20(1)_1000x1000.jpg",
+            title: "Игровой корпус HIPER HG302 SHADOW",
+            text: "На 30% дешевле, при заказе готовой сборки!",
             category: "акции",
-            discount: 100,
+            discount: 30,
             promoCodes: ["free", "delivery"],
             modelPath: "./models/computer.glb"
         }
