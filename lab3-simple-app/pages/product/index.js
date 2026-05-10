@@ -66,6 +66,11 @@ export class ProductPage {
         const productContainer = document.getElementById('product-info-container');
         const modelContainer = document.getElementById('three-model-container');
         if (!productContainer || !modelContainer) return;
+
+        // Очищаем контейнеры перед добавлением новых данных
+        productContainer.innerHTML = '';
+        modelContainer.innerHTML = '';
+
         const product = new ProductComponent(productContainer);
         product.render(item);
         const threeModel = new ThreeModelComponent(modelContainer, item.modelPath || './models/computer.glb');
@@ -170,15 +175,4 @@ export class ProductPage {
             this.startPolling();
         });
     }
-}
-
-// Вспомогательная функция для защиты от XSS
-function escapeHtml(str) {
-    if (!str) return '';
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
 }
