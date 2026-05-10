@@ -6,11 +6,22 @@ import { OrdersPage } from "../orders/index.js";
 import { ajax } from "../../modules/ajax.js";
 import { stockUrls } from "../../modules/stockUrls.js";
 
+// Функция для защиты от XSS (определяем до использования)
+function escapeHtml(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 export class ProductPage {
     constructor(parent, id) {
         this.parent = parent;
         this.id = parseInt(id);
-        this.pollingInterval = null;   // для хранения таймера Short Polling
+        this.pollingInterval = null;
     }
 
     get pageRoot() {
@@ -51,6 +62,12 @@ export class ProductPage {
     async loadData() {
         try {
             const data = await ajax.get(stockUrls.getStockById(this.id));
+            // Очищаем контейнеры перед рендером, чтобы избежать дублирования
+            const productContainer = document.getElementById('product-info-container');
+            const modelContainer = document.getElementById('three-model-container');
+            if (productContainer) productContainer.innerHTML = '';
+            if (modelContainer) modelContainer.innerHTML = '';
+
             this.renderData(data);
             this.renderComments(data.comments || []);
         } catch (error) {
@@ -66,10 +83,6 @@ export class ProductPage {
         const productContainer = document.getElementById('product-info-container');
         const modelContainer = document.getElementById('three-model-container');
         if (!productContainer || !modelContainer) return;
-
-        // Очищаем контейнеры перед добавлением новых данных
-        productContainer.innerHTML = '';
-        modelContainer.innerHTML = '';
 
         const product = new ProductComponent(productContainer);
         product.render(item);
@@ -108,8 +121,9 @@ export class ProductPage {
             await ajax.post(stockUrls.addComment(this.id), { author, text });
             authorInput.value = '';
             textInput.value = '';
-            // После добавления комментария сразу обновляем список
-            await this.loadData();
+            // Обновляем комментарии, не перегружая всю страницу
+            const data = await ajax.get(stockUrls.getStockById(this.id));
+            this.renderComments(data.comments || []);
         } catch (error) {
             console.error('Ошибка добавления комментария:', error);
             alert('Не удалось добавить комментарий');
@@ -170,7 +184,6 @@ export class ProductPage {
             submitButton.addEventListener('click', () => this.addComment());
         }
 
-        // Загружаем данные и запускаем Short Polling
         this.loadData().then(() => {
             this.startPolling();
         });
