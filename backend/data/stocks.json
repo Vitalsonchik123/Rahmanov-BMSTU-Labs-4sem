@@ -6,7 +6,11 @@
     "text": "Скидка до 50% на все мониторы!",
     "category": "комплектующие",
     "discount": 50,
-    "promoCodes": ["sale", "sale50", "screen"],
+    "promoCodes": [
+      "sale",
+      "sale50",
+      "screen"
+    ],
     "modelPath": "./models/computer.glb"
   },
   {
@@ -16,7 +20,11 @@
     "text": "Купи 2 флешки - получи 3-ю в подарок!",
     "category": "аксессуары",
     "discount": 10,
-    "promoCodes": ["flash", "sale10", "drive"],
+    "promoCodes": [
+      "flash",
+      "sale10",
+      "drive"
+    ],
     "modelPath": "./models/computer.glb"
   },
   {
@@ -26,7 +34,10 @@
     "text": "Скидка 30% на весь ассортимент!",
     "category": "комплектующие",
     "discount": 30,
-    "promoCodes": ["sale30", "saleAll"],
+    "promoCodes": [
+      "sale30",
+      "saleAll"
+    ],
     "modelPath": "./models/computer.glb"
   },
   {
@@ -36,7 +47,9 @@
     "text": "При заказе от 5000 руб.",
     "category": "акции",
     "discount": 0,
-    "promoCodes": ["present"],
+    "promoCodes": [
+      "present"
+    ],
     "modelPath": "./models/computer.glb"
   },
   {
@@ -46,7 +59,10 @@
     "text": "Бесплатная доставка при заказе от 3000 руб!",
     "category": "акции",
     "discount": 100,
-    "promoCodes": ["free", "delivery"],
+    "promoCodes": [
+      "free",
+      "delivery"
+    ],
     "modelPath": "./models/computer.glb"
   }
 ]
